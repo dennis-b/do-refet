@@ -1,9 +1,10 @@
 import React from 'react';
+import { StyledRoot } from "@pages/Home/styled";
 
 export const HomePage = () => {
     return (
-        <div>
+        <StyledRoot>
             Home Page
-        </div>
+        </StyledRoot>
     );
 };
