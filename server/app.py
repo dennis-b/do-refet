@@ -1,7 +1,5 @@
-from database import init_db
+#from database import init_db
 from flask import Flask
-from flask_graphql import GraphQLView
-from schema import schema
 
 app = Flask(__name__)
 app.debug = True
@@ -42,9 +40,7 @@ app.debug = True
 #   }
 # }""".strip()
 
-app.add_url_rule(
-    "/graphql", view_func=GraphQLView.as_view("graphql", schema=schema, graphiql=True)
-)
+
 
 if __name__ == "__main__":
     from database import  Database
@@ -52,5 +48,9 @@ if __name__ == "__main__":
     from datetime import datetime
     db = Database()
     refet = Refet(db)
+    j = refet.getProjectsJson()
     totalValue = refet.get_value(datetime.now())
-    app.run()
+    app.add_url_rule(
+        "/projects", "projects", refet.getProjectsJson
+    )
+    app.run(port=59678)

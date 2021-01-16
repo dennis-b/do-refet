@@ -1,6 +1,7 @@
-
 from classes.project import Project
 from datetime import datetime
+import json
+
 class Refet:
     def __init__(self, db):
 
@@ -26,3 +27,16 @@ class Refet:
         pr = Project(name, equity, currency, irr , start_date , end_date )
         self._projects.append(pr)
         self._db.save_project(pr)
+
+    def getProjectsJson(self):
+        '''
+        get all projects in json format
+        :return:
+        '''
+
+        json_string =  json.dumps( self._projects, default=lambda o: o.__dict__ if not  isinstance(o, datetime) else dict (year=o.year, month=o.month, day=o.day) ,
+                          sort_keys=True, indent=4)
+        return  json_string
+
+
+

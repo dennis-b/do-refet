@@ -1,6 +1,8 @@
 
 from datetime import datetime
 from classes.currency import get_currency
+import json
+from json import JSONEncoder
 
 class Project:
 
@@ -36,12 +38,20 @@ class Project:
 
 
 
+    def toJSON(self):
+        return json.dumps(self, default=lambda o: o.__dict__ if not  isinstance(o, datetime) else dict (year=o.year, month=o.month, day=o.day) ,
+                          sort_keys=True, indent=4)
+
+
 
 if __name__=="__main__":
 
     p = Project("test", equity=60000, currency="usd", irr=11.5, start_date=datetime(2020,1,1), end_date= datetime(2023,1,1))
-
-    p.value(datetime.now())
+    s = p.toJSON()
+    print(s)
+    #s = json.dump(p, fp = open("pr.json", 'w'))
+    #print(s)
+    #p.value(datetime.now())
 
 
 
