@@ -1,19 +1,19 @@
 import {
-    drawerWidth,
-    transition,
-    boxShadow,
-    defaultFont,
-    primaryColor,
-    primaryBoxShadow,
-    infoColor,
-    successColor,
-    warningColor,
-    dangerColor,
-    whiteColor,
-    grayColor,
     blackColor,
-    hexToRgb
-} from "assets/jss/material-dashboard-react.js";
+    boxShadow,
+    dangerColor,
+    defaultFont,
+    drawerWidth,
+    grayColor,
+    hexToRgb,
+    infoColor,
+    primaryBoxShadow,
+    primaryColor,
+    successColor,
+    transition,
+    warningColor,
+    whiteColor
+} from "../../material-dashboard-react.js";
 
 const sidebarStyle = theme => ({
     drawerPaper: {

@@ -1,15 +1,14 @@
 import {
     container,
-    defaultFont,
-    primaryColor,
+    dangerColor,
     defaultBoxShadow,
+    defaultFont,
+    grayColor,
     infoColor,
     successColor,
     warningColor,
-    dangerColor,
-    whiteColor,
-    grayColor
-} from "assets/jss/material-dashboard-react.js";
+    whiteColor
+} from "../../material-dashboard-react.js";
 
 const headerStyle = () => ({
     appBar: {
@@ -43,7 +42,7 @@ const headerStyle = () => ({
         fontSize: "18px",
         borderRadius: "3px",
         textTransform: "none",
-        color: "inherit",
+        color: "gray",
         margin: "0",
         "&:hover,&:focus": {
             background: "transparent"
@@ -53,7 +52,7 @@ const headerStyle = () => ({
         top: "8px"
     },
     primary: {
-        backgroundColor: primaryColor[0],
+        backgroundColor: "transparent",
         color: whiteColor,
         ...defaultBoxShadow
     },

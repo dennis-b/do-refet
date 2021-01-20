@@ -1,8 +1,4 @@
-import {
-  drawerWidth,
-  transition,
-  container
-} from "assets/jss/material-dashboard-react.js";
+import {container, drawerWidth, transition} from "../../material-dashboard-react.js";
 
 const appStyle = theme => ({
   wrapper: {
@@ -25,7 +21,8 @@ const appStyle = theme => ({
   content: {
     marginTop: "70px",
     padding: "30px 15px",
-    minHeight: "calc(100vh - 123px)"
+    minHeight: "calc(100vh - 123px)",
+    display: 'flex'
   },
   container,
   map: {
