@@ -15,6 +15,7 @@ class Database:
                           start_equity=project._equity, currency=project._currency)
 
         project.save()
+        return project.id
 
     
 

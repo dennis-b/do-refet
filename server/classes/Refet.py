@@ -1,6 +1,7 @@
 from classes.project import Project
 from datetime import datetime
 import json
+from flask import request
 
 class Refet:
     def __init__(self, db):
@@ -26,7 +27,17 @@ class Refet:
     def add_project(self, name="", equity = 0, currency='nis', irr = 0, start_date = datetime.now(), end_date = None):
         pr = Project(name, equity, currency, irr , start_date , end_date )
         self._projects.append(pr)
-        self._db.save_project(pr)
+        id = self._db.save_project(pr)
+        return id
+
+
+    def project(self):
+        if request.method == 'POST':
+            return self.add_projectR()
+        elif request.method == 'GET':
+            return self.getProjectsJson()
+        raise NotImplementedError("only get and post are supported")
+
 
     def getProjectsJson(self):
         '''
@@ -34,9 +45,17 @@ class Refet:
         :return:
         '''
 
-        json_string =  json.dumps( self._projects, default=lambda o: o.__dict__ if not  isinstance(o, datetime) else dict (year=o.year, month=o.month, day=o.day) ,
+        json_string =  json.dumps( self._projects, default=lambda o: o.__dict__ if not  isinstance(o, datetime) else o.isoformat() ,
                           sort_keys=True, indent=4)
         return  json_string
 
 
+    def add_projectR(self):
+         r =request.json
+         start_date = r['startDate']
+         end_date = r['endDate']
 
+         id = self.add_project(r['name'], equity = r['equity'], currency=r['currency'], irr = r['irr'],
+                          start_date = datetime.strptime(start_date, "%Y-%m-%dT%H:%M:%S").date(),
+                          end_date= datetime.strptime(end_date, "%Y-%m-%dT%H:%M:%S").date() )
+         return json.dumps({'ok': True, 'id':str(id)})

@@ -39,7 +39,7 @@ class Project:
 
 
     def toJSON(self):
-        return json.dumps(self, default=lambda o: o.__dict__ if not  isinstance(o, datetime) else dict (year=o.year, month=o.month, day=o.day) ,
+        return json.dumps(self, default=lambda o: o.__dict__ if not  isinstance(o, datetime) else o.isoformat() ,
                           sort_keys=True, indent=4)
 
 

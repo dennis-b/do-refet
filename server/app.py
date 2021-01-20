@@ -1,5 +1,6 @@
 #from database import init_db
 from flask import Flask
+from flask import request
 
 app = Flask(__name__)
 app.debug = True
@@ -41,6 +42,12 @@ app.debug = True
 # }""".strip()
 
 
+# @app.route('/addproject', methods=[ 'POST'])
+# def add_projectR():
+#     print("")
+#     if request.method == 'POST':
+#         print("")
+#     pass
 
 if __name__ == "__main__":
     from database import  Database
@@ -51,6 +58,7 @@ if __name__ == "__main__":
     j = refet.getProjectsJson()
     totalValue = refet.get_value(datetime.now())
     app.add_url_rule(
-        "/projects", "projects", refet.getProjectsJson
+        "/project", "project", refet.project,  methods=[ 'GET', 'POST']
     )
+    #app.add_url_rule("/project", "project",  refet.add_projectR, methods=[ 'POST'] )
     app.run(port=59678)
