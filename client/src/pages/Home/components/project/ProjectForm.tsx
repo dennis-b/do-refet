@@ -1,15 +1,15 @@
 import React from 'react';
-import { Field, Form, Formik } from 'formik';
-
-import { Box, Button, LinearProgress } from "@material-ui/core";
-import { StyledTextField } from "@pages/Home/components/project/styled";
-
+import { Field, Formik } from 'formik';
+import { Box, Button, Grid, LinearProgress } from "@material-ui/core";
+import { StyledForm } from "@pages/Home/components/project/styled";
+import { DatePicker } from "formik-material-ui-pickers";
+import { TextField } from "formik-material-ui";
 
 export interface ProjectValues {
     name: string;
     desc: string;
-    startDate: string;
-    endDate: string;
+    startDate: Date;
+    endDate: Date;
     irr: string;
     equity: string;
     currency: string;
@@ -18,8 +18,8 @@ export interface ProjectValues {
 const defValues = {
     name: '',
     desc: '',
-    startDate: '',
-    endDate: '',
+    startDate: new Date(),
+    endDate: new Date(),
     irr: '',
     equity: '',
     currency: '',
@@ -38,56 +38,71 @@ export const ProjectForm = ({ onSubmit }: any) => {
     return (
         <Formik
             initialValues={defValues}
-            validate={(values: ProjectValues) => {
-                const errors: Partial<ProjectValues> = {};
-                if (!values.name) {
-                    errors.name = 'Required';
-                } else if (
-                    !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.name)
-                ) {
-                    errors.name = 'Invalid email address';
-                }
-                return errors;
-            }}
             onSubmit={onSubmitInner}
         >
             {({ submitForm, isSubmitting }) => (
-                <Form>
+                <StyledForm>
                     <Field
-                        component={StyledTextField}
+                        component={TextField}
                         name="name"
                         type="text"
                         label="name"
                         width={'70%'}
+                        fullWidth
                     />
                     <Field
-                        component={StyledTextField}
+                        component={TextField}
                         name="desc"
                         type="text"
                         label="desc"
                         width={'70%'}
+                        fullWidth
                     />
                     <Field
-                        component={StyledTextField}
+                        component={TextField}
                         name="irr"
                         type="text"
                         label="irr"
                         width={'70%'}
+                        fullWidth
                     />
                     <Field
-                        component={StyledTextField}
+                        component={TextField}
                         name="equity"
                         type="text"
                         label="equity"
                         width={'70%'}
+                        fullWidth
                     />
                     <Field
-                        component={StyledTextField}
+                        component={TextField}
                         name="currency"
                         type="text"
                         label="currency"
                         width={'70%'}
+                        fullWidth
                     />
+                    <Box mt={2}>
+                        <Grid container spacing={4}>
+                            <Grid item xs={6}>
+                                <Field
+                                    component={DatePicker}
+                                    name="startDate"
+                                    label="Start Date"
+                                    fullWidth
+                                />
+                            </Grid>
+                            <Grid item xs={6}>
+                                <Field
+                                    component={DatePicker}
+                                    name="endDate"
+                                    label="End Date"
+                                    fullWidth
+                                />
+                            </Grid>
+                        </Grid>
+
+                    </Box>
                     {isSubmitting && <LinearProgress />}
                     <Box mt={2}>
                         <Button
@@ -99,7 +114,7 @@ export const ProjectForm = ({ onSubmit }: any) => {
                             Submit
                         </Button>
                     </Box>
-                </Form>
+                </StyledForm>
             )}
         </Formik>
     );

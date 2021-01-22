@@ -1,8 +1,8 @@
-import { TextField } from "formik-material-ui";
 import styled from "styled-components";
+import { Form } from "formik";
 
 
-export const StyledTextField = styled(TextField)<{ width: string }>`
-  width: ${({ width }) => width || 'inherit'};
-  display: block;
+export const StyledForm = styled(Form)`
+  width: 70%;
+  align-self: center;
 `
