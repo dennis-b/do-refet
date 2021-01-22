@@ -46,8 +46,9 @@ class Refet:
         pr._equity = r['equity']
         pr._currency = r['currency']
         pr._irr = r['irr']
-        pr._start_date = datetime.strptime(start_date, "%Y-%m-%dT%H:%M:%S").date()
-        pr._end_date = datetime.strptime(end_date, "%Y-%m-%dT%H:%M:%S").date()
+
+        pr._start_date = datetime.strptime(start_date, "%Y-%m-%dT%H:%M:%S:%fZ").date()
+        pr._end_date = datetime.strptime(end_date, "%Y-%m-%dT%H:%M:%S:%fZ").date()
         updated = self._db.update_project(pr)
         if  updated:
             ret =  json.dumps({'ok': True})
