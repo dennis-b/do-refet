@@ -47,8 +47,8 @@ class Refet:
         pr._currency = r['currency']
         pr._irr = r['irr']
 
-        pr._start_date = datetime.strptime(start_date, "%Y-%m-%dT%H:%M:%S:%fZ").date()
-        pr._end_date = datetime.strptime(end_date, "%Y-%m-%dT%H:%M:%S:%fZ").date()
+        pr._start_date = datetime.strptime(start_date, "%Y-%m-%dT%H:%M:%S.%fZ").date()
+        pr._end_date = datetime.strptime(end_date, "%Y-%m-%dT%H:%M:%S.%fZ").date()
         updated = self._db.update_project(pr)
         if  updated:
             ret =  json.dumps({'ok': True})
@@ -86,6 +86,6 @@ class Refet:
          end_date = r['endDate']
 
          id = self.add_project(r['name'], equity = r['equity'], currency=r['currency'], irr = r['irr'],
-                          start_date = datetime.strptime(start_date, "%Y-%m-%dT%H:%M:%S").date(),
-                          end_date= datetime.strptime(end_date, "%Y-%m-%dT%H:%M:%S").date() )
+                          start_date = datetime.strptime(start_date, "%Y-%m-%dT%H:%M:%S.%fZ").date(),
+                          end_date= datetime.strptime(end_date, "%Y-%m-%dT%H:%M:%S.%fZ").date() )
          return json.dumps({'ok': True, 'id':str(id)})

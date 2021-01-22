@@ -6,51 +6,6 @@ from flask_cors import CORS, cross_origin
 app = Flask(__name__)
 app.debug = True
 CORS(app)
-#
-# default_query = """
-# {
-#   allProjects {
-#     edges {
-#       node {
-#         id,
-#         name,
-#         department {
-#           id,
-#           name
-#         },
-#         roles {
-#           edges {
-#             node {
-#               id,
-#               name
-#             }
-#           }
-#         },
-#         leader {
-#           id,
-#           name
-#         }
-#         tasks {
-#           edges {
-#             node {
-#               name,
-#               deadline
-#             }
-#           }
-#         }
-#       }
-#     }
-#   }
-# }""".strip()
-
-
-# @app.route('/addproject', methods=[ 'POST'])
-# def add_projectR():
-#     print("")
-#     if request.method == 'POST':
-#         print("")
-#     pass
-
 from database import  Database
 from classes.Refet import Refet
 from datetime import datetime
