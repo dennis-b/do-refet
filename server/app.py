@@ -2,27 +2,26 @@
 from flask import Flask
 from flask import request
 from flask_cors import CORS, cross_origin
-
-app = Flask(__name__)
-app.debug = True
-CORS(app)
-from database import  Database
+from database import Database
 from classes.Refet import Refet
-from datetime import datetime
-db = Database()
-refet = Refet(db)
-j = refet.getProjectsJson()
-totalValue = refet.get_value(datetime.now())
 
-@app.route("/project", methods = ['POST'])
-def helloWorld():
-  return refet.project()
+def main():
+  app = Flask(__name__)
+  app.debug = True
+  CORS(app)
+  db = Database()
+  refet = Refet(db)
+  app.add_url_rule(
+             "/project", "project", refet.project,  methods=[ 'GET', 'POST', 'PUT']
+         )
+  app.add_url_rule(
+    "/stats", "stats", refet.stats, methods=['GET']
+  )
 
-app.run(port=59678)
+  app.add_url_rule( "/refetValue", 'refetValue', refet.valueGraph, methods = [ 'GET' ])
+  app.run(port=59678)
 
-# if __name__ == "__main__":
+if __name__ == "__main__":
+  main()
 
-#     app.add_url_rule(
-#         "/project", "project", refet.project,  methods=[ 'GET', 'POST', 'PUT']
-#     )
 

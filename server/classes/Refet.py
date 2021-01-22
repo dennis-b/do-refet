@@ -2,6 +2,11 @@ from classes.project import Project
 from datetime import datetime
 import json
 from flask import request
+from dateutil.relativedelta import *
+
+
+def parseDate(dateStr):
+    return datetime.strptime(dateStr, "%Y-%m-%dT%H:%M:%S.%fZ")
 
 class Refet:
     def __init__(self, db):
@@ -47,8 +52,8 @@ class Refet:
         pr._currency = r['currency']
         pr._irr = r['irr']
 
-        pr._start_date = datetime.strptime(start_date, "%Y-%m-%dT%H:%M:%S.%fZ").date()
-        pr._end_date = datetime.strptime(end_date, "%Y-%m-%dT%H:%M:%S.%fZ").date()
+        pr._start_date = parseDate(start_date)
+        pr._end_date = parseDate(end_date)
         updated = self._db.update_project(pr)
         if  updated:
             ret =  json.dumps({'ok': True})
@@ -80,12 +85,37 @@ class Refet:
         return  json_string
 
 
+    def stats(self):
+        stats = {}
+        stats['currentValue'] = self.get_value(datetime.now())
+        return json.dumps(stats)
+
+
+    def valueGraph(self):
+        ret = {}
+        start = request.args.get('startDate')
+        end = request.args.get('endDate')
+        interval = request.args.get('interval')
+        startDate = parseDate(start)
+        endDate = parseDate(end)
+        dt = startDate
+        while dt <= endDate:
+            ret[dt.isoformat()] = self.get_value(dt)
+            dt += relativedelta(months=+int(interval))
+
+
+        return json.dumps(ret)
+
+
+
+
+
     def add_projectR(self):
          r =request.json
          start_date = r['startDate']
          end_date = r['endDate']
 
          id = self.add_project(r['name'], equity = r['equity'], currency=r['currency'], irr = r['irr'],
-                          start_date = datetime.strptime(start_date, "%Y-%m-%dT%H:%M:%S.%fZ").date(),
-                          end_date= datetime.strptime(end_date, "%Y-%m-%dT%H:%M:%S.%fZ").date() )
+                          start_date = parseDate(start_date),
+                          end_date= parseDate(end_date) )
          return json.dumps({'ok': True, 'id':str(id)})
