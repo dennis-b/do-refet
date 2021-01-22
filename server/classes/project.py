@@ -13,6 +13,9 @@ class Project:
         self._end_date = end_date
         self._equity = equity
         self._currency = currency
+        self._type = ""
+        self._description = ""
+        self._id = ""
 
 
     def value(self, date):
@@ -35,6 +38,7 @@ class Project:
         self._equity = proj.start_equity
         self._irr = proj.irr
         self._currency = proj.currency
+        self._id = str(proj.id)
 
 
 

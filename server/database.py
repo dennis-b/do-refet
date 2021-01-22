@@ -11,11 +11,32 @@ class Database:
         connect("graphene-mongo-example", host="mongodb://localhost:27017", alias="default")
 
     def save_project(self, project):
+        '''
+
+        :param project:
+        :return: project id in the database
+        '''
         project = Project(name=project._name, start_date=project._start_date, end_date=project._end_date, irr=project._irr,
-                          start_equity=project._equity, currency=project._currency)
+                          start_equity=project._equity, currency=project._currency, type = project._type )
 
         project.save()
         return project.id
+
+    def update_project(self, project):
+
+        for pr in Project.objects:
+            if str(pr.id) == project._id:
+                pr.name = project._name
+                pr.start_date = project._start_date
+                pr.end_date = project._end_date
+                pr.irr = project._irr
+                pr.equity = project._equity
+                pr.currency = project._currency
+                pr.type = project._type
+                pr.save()
+                return True
+        return False
+
 
     
 

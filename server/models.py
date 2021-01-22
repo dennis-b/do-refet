@@ -38,6 +38,8 @@ class Project(Document):
     start_equity = IntField(min_value=0)
     irr = FloatField(min_value=0)
     currency  = StringField()
+    type = StringField(default="")
+    description = StringField(default="")
 
     # department = ReferenceField(Department)
     # roles = ListField(ReferenceField(Role))

@@ -58,7 +58,6 @@ if __name__ == "__main__":
     j = refet.getProjectsJson()
     totalValue = refet.get_value(datetime.now())
     app.add_url_rule(
-        "/project", "project", refet.project,  methods=[ 'GET', 'POST']
+        "/project", "project", refet.project,  methods=[ 'GET', 'POST', 'PUT']
     )
-    #app.add_url_rule("/project", "project",  refet.add_projectR, methods=[ 'POST'] )
     app.run(port=59678)
