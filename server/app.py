@@ -6,11 +6,14 @@ from database import Database
 from classes.Refet import Refet
 
 def main():
+
   app = Flask(__name__)
   app.debug = True
   CORS(app)
   db = Database()
-  refet = Refet(db)
+  refet = Refet(db, app)
+  #j = refet.getProjectsJson()
+
   app.add_url_rule(
              "/project", "project", refet.project,  methods=[ 'GET', 'POST', 'PUT']
          )

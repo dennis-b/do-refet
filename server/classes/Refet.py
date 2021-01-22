@@ -9,11 +9,12 @@ def parseDate(dateStr):
     return datetime.strptime(dateStr, "%Y-%m-%dT%H:%M:%S.%fZ")
 
 class Refet:
-    def __init__(self, db):
+    def __init__(self, db, app):
 
         self._db  = db
         self._projects = {}
         self._read_projects_from_db()
+        self._app = app
 
     def _read_projects_from_db(self):
         from models import Project as aProject
@@ -79,10 +80,21 @@ class Refet:
         get all projects in json format
         :return:
         '''
+        from flask import jsonify
+        from flask import json as flaskJson
 
-        json_string =  json.dumps( list(self._projects.values()), default=lambda o: o.__dict__ if not  isinstance(o, datetime) else o.isoformat() ,
-                          sort_keys=True, indent=4)
-        return  json_string
+        # json_string =  json.dumps( list(self._projects.values()), default=lambda o: o.__dict__ if not  isinstance(o, datetime) else o.isoformat() ,
+        #                   sort_keys=True, indent=4)
+
+        response = self._app.response_class(
+            response=json.dumps(list(self._projects.values()), default=lambda o: o.__dict__ if not  isinstance(o, datetime) else o.isoformat() ,
+                          sort_keys=True, indent=4),
+            status=200,
+            mimetype='application/json'
+        )
+        return response
+        #g = jsonify(json_string)
+        #return  g
 
 
     def stats(self):
