@@ -21,32 +21,32 @@ import FixedPlugin from "@components/FixedPlugin/FixedPlugin";
 let ps;
 
 const switchRoutes = (
-        < Switch>
-            {
-                routes.map((prop, key) => {
-                    if (prop.layout === "/admin") {
-                        return (
-                            < Route
-                                path={prop.layout + prop.path}
-                                component={prop.component}
-                                key={key}
-                            />
-                        )
-                            ;
-                    }
-                    return null;
-                })
-            }
-            <Redirect
-                from="/admin"
-                to="/admin/dashboard"/>
-        </Switch>
-    )
+  < Switch >
+  {
+      routes.map((prop, key) => {
+          if (prop.layout === "/admin") {
+              return (
+                < Route
+              path = { prop.layout + prop.path }
+              component = { prop.component }
+              key = { key }
+              />
+          )
+              ;
+          }
+          return null;
+      })
+  }
+  < Redirect
+from = "/admin"
+to = "/admin/dashboard" / >
+  < /Switch>
+)
 ;
 
 const useStyles = makeStyles(styles);
 
-export default function Admin({...rest}) {
+export default function Admin({ ...rest }) {
     // styles
     const classes = useStyles();
     // ref to help us initialize PerfectScrollbar on windows devices
@@ -83,7 +83,7 @@ export default function Admin({...rest}) {
     // initialize and destroy the PerfectScrollbar plugin
     React.useEffect(() => {
         if (navigator.platform.indexOf("Win") > -1) {
-            ps = new PerfectScrollbar(.current, {
+            ps = new PerfectScrollbar(mainPanel.current, {
                 suppressScrollX: true,
                 suppressScrollY: false
             });
@@ -99,57 +99,62 @@ export default function Admin({...rest}) {
         };
     }, [mainPanel]);
     return (
-        <div
-            className={classes.wrapper}>
-            <Sidebar
-                routes={routes}
-                logoText={"Creative Tim"}
-                logo={logo}
-                image={image}
-                handleDrawerToggle={handleDrawerToggle}
-                open={mobileOpen}
-                color={color}
-                {...rest}
-            />
-            < div
-                className={classes.mainPanel}
-                ref={mainPanel}>
-                <Navbar
-                    routes={routes}
-                    handleDrawerToggle={handleDrawerToggle}
-                    {...rest}
-                />
-                {/* On the /maps route we want the map to be on full screen - this is not possible if the content and conatiner classes are present because they have some paddings which would make the map smaller */
-                }
-                {
-                    getRoute() ? (
-                            <div className={classes.content}>
-                                <div
-                                    className={classes.container}> {switchRoutes}
-                                </div>
-                            </div>
-                        ) :
-                        (
-                            <div className={classes.map}> {switchRoutes} </div>
-                        )
-                }
-                {
-                    getRoute() ?
-                        <Footer/>
-                        :
-                        null
-                }
-                <
-                    FixedPlugin
-                    handleImageClick={handleImageClick}
-                    handleColorClick={handleColorClick}
-                    bgColor={color}
-                    bgImage={image}
-                    handleFixedClick={handleFixedClick}
-                    fixedClasses={fixedClasses}
-                />
-            </div>
-        </div>
+      < div
+    className = { classes.wrapper } >
+      < Sidebar
+    routes = { routes }
+    logoText = { "Creative Tim" }
+    logo = { logo }
+    image = { image }
+    handleDrawerToggle = { handleDrawerToggle }
+    open = { mobileOpen }
+    color = { color }
+    {...
+        rest
+    }
+    />
+    < div
+    className = { classes.mainPanel }
+    ref = { mainPanel } >
+      < Navbar
+    routes = { routes }
+    handleDrawerToggle = { handleDrawerToggle }
+    {...
+        rest
+    }
+    />
+    {/* On the /maps route we want the map to be on full screen - this is not possible if the content and conatiner classes are present because they have some paddings which would make the map smaller */
+    }
+    {
+        getRoute() ? (
+          < div className = { classes.content } >
+          < div
+        className = { classes.container } > { switchRoutes } < /div>
+          < /div>
+    ) :
+        (
+        < div
+        className = { classes.map } > { switchRoutes } < /div>
     )
-        ;
+    }
+    {
+        getRoute() ?
+    <
+        Footer / >
+    :
+        null
+    }
+<
+    FixedPlugin
+    handleImageClick = { handleImageClick }
+    handleColorClick = { handleColorClick }
+    bgColor = { color }
+    bgImage = { image }
+    handleFixedClick = { handleFixedClick }
+    fixedClasses = { fixedClasses }
+    />
+    < /div>
+    < /div>
+)
+    ;
 }

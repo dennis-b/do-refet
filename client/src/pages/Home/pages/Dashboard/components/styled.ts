@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 
-export const StyledRoot = styled.div`
+export const StyledRootOld = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;

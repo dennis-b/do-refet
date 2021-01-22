@@ -1,6 +1,5 @@
 import React from "react";
-import classNames from "classnames";
-import {makeStyles} from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -16,16 +15,15 @@ export function Navbar({handleDrawerToggle}: any) {
         return 'make brand'
     }
 
-    const appBarClasses = classNames({[" " + classes['primary']]: 'primary'});
-
     return (
-        <AppBar className={classes.appBar + appBarClasses}>
-            <Toolbar className={classes.container}>
+        <AppBar className={classes.appBar + ' primary'}>
+            <Toolbar>
                 <div className={classes.flex}>
                     <Button
                         color="secondary"
                         href="#"
-                        className={classes.title}>
+                        className={classes.title}
+                    >
                         {makeBrand()}
                     </Button>
                 </div>
@@ -33,7 +31,7 @@ export function Navbar({handleDrawerToggle}: any) {
                     smDown
                     implementation="css"
                 >
-                    AdminNavbarLinks
+                    Links
                 </Hidden>
             </Toolbar>
         </AppBar>

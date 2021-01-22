@@ -1,8 +1,8 @@
 import styled from "styled-components";
 
-
 export const StyledRoot = styled.div`
-  position: relative;
-  top: 0;
-  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
 `

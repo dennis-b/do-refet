@@ -8,7 +8,7 @@ from datetime import datetime
 class Database:
 
     def __init__(self):
-        connect("graphene-mongo-example", host="mongodb://localhost:27017", alias="default")
+        connect("do-refet", host="mongodb://localhost:27017", alias="default")
 
     def save_project(self, project):
         '''

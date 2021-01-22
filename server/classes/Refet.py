@@ -74,7 +74,7 @@ class Refet:
         :return:
         '''
 
-        json_string =  json.dumps( self._projects.values(), default=lambda o: o.__dict__ if not  isinstance(o, datetime) else o.isoformat() ,
+        json_string =  json.dumps( list(self._projects.values()), default=lambda o: o.__dict__ if not  isinstance(o, datetime) else o.isoformat() ,
                           sort_keys=True, indent=4)
         return  json_string
 
