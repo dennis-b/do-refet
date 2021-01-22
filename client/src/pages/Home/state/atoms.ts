@@ -1,9 +1,9 @@
-import {atom} from "recoil";
+import { atom } from "recoil";
 
 export interface ProjectModel {
     name: string
-    desc: string
-    rri: string
+    description: string
+    irr: string
 }
 
 export const projectsState = atom<ProjectModel[]>({

@@ -4,12 +4,11 @@ import { Redirect, Route, Router, Switch } from "react-router-dom";
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import { RecoilRoot } from "recoil";
 import DateFnsUtils from "@date-io/date-fns";
+import { RestfulProvider } from "restful-react";
 
 import { StyledAppRoot } from '@components/Layoat';
 import { appRoutes } from "./appRoutes";
-
 import './App.css';
-import { RestfulProvider } from "restful-react";
 
 
 const hist = createBrowserHistory();

@@ -1,8 +1,8 @@
 import React from 'react';
-import {makeStyles} from "@material-ui/core/styles";
-import {Button, Card, CardActionArea, CardActions, CardContent, CardMedia, Grid, Typography} from "@material-ui/core";
-import {AppAssets} from "@assets/index";
-import {ProjectModel} from "@pages/Home/pages/Dashboard/state";
+import { makeStyles } from "@material-ui/core/styles";
+import { Button, Card, CardActionArea, CardActions, CardContent, CardMedia, Grid, Typography } from "@material-ui/core";
+import { AppAssets } from "@assets/index";
+import { ProjectModel } from "@pages/Home/state";
 
 
 const useStyles = makeStyles({
@@ -18,7 +18,7 @@ interface Props {
     project: ProjectModel
 }
 
-export const Project = ({project: {name, desc, rri}}: Props) => {
+export const Project = ({ project: { name, description, irr } }: Props) => {
     const classes = useStyles();
 
     return (
@@ -35,10 +35,10 @@ export const Project = ({project: {name, desc, rri}}: Props) => {
                             {name}
                         </Typography>
                         <Typography variant="body2" color="textSecondary" component="p">
-                            {desc}
+                            {description}
                         </Typography>
                         <Typography variant="body2" color="textSecondary" component="p">
-                            {rri}
+                            {irr}
                         </Typography>
                     </CardContent>
                 </CardActionArea>

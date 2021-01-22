@@ -1,33 +1,29 @@
-import React, { useEffect } from 'react';
-import { getProjects } from "@pages/Home/pages/Dashboard/components/Projects/mocks";
+import React from 'react';
 import { useRecoilState } from "recoil";
 import { Box, Fab, Typography } from '@material-ui/core';
 import { useHistory } from "react-router";
 import AddIcon from '@material-ui/icons/Add';
 
-import { Projects } from "@pages/Home/pages/Dashboard/components/Projects/Projects";
+import { Projects } from "@pages/Home/components/Projects/Projects";
 import { StyledRoot } from "@pages/Home/components/styled";
 
-import { projectsState } from "./state";
+import { projectsState } from "../state";
+import { useGet } from "restful-react";
+import { responseResolver } from "@utils/appUtils";
 
-export const DashboardPage = () => {
+export const ProjectsPage = () => {
 
     const history = useHistory();
 
     const [projects, setProjects] = useRecoilState(projectsState)
-    const getMockData = async () => {
-        const data: any = await getProjects()
-        setProjects(data)
-    }
+    useGet({
+        path: 'project',
+        resolve: (data) => setProjects(responseResolver(data))
+    })
 
-    useEffect(() => {
-        getMockData()
-    }, [])
+    const onAddProject = () => history.push('/home/project/add');
 
-    const onAddProject = () => {
-        console.log('ddd')
-        history.push('/home/project/add')
-    }
+    console.log(projects)
 
     return (
         <StyledRoot>
@@ -48,7 +44,7 @@ export const DashboardPage = () => {
                     </Fab>
                 </Box>
             </Box>
-            <Projects projects={projects} />
+            {projects && <Projects projects={projects} />}
         </StyledRoot>
     );
 };

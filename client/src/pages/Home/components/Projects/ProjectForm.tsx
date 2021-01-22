@@ -1,13 +1,13 @@
 import React from 'react';
 import { Field, Formik } from 'formik';
 import { Box, Button, Grid, LinearProgress } from "@material-ui/core";
-import { StyledForm } from "@pages/Home/components/project/styled";
 import { DatePicker } from "formik-material-ui-pickers";
 import { TextField } from "formik-material-ui";
+import { StyledForm } from '../styled';
 
 export interface ProjectValues {
     name: string;
-    desc: string;
+    description: string;
     startDate: Date;
     endDate: Date;
     irr: string;
@@ -15,9 +15,9 @@ export interface ProjectValues {
     currency: string;
 }
 
-const defValues = {
+const defValues: ProjectValues = {
     name: '',
-    desc: '',
+    description: '',
     startDate: new Date(),
     endDate: new Date(),
     irr: '',
@@ -52,9 +52,9 @@ export const ProjectForm = ({ onSubmit }: any) => {
                     />
                     <Field
                         component={TextField}
-                        name="desc"
+                        name="description"
                         type="text"
-                        label="desc"
+                        label="description"
                         width={'70%'}
                         fullWidth
                     />

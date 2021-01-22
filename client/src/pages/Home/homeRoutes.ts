@@ -1,9 +1,8 @@
 import Person from "@material-ui/icons/Person";
 import Notifications from "@material-ui/icons/Notifications";
-
-import {UserPage} from "@pages/User";
-import { DashboardPage } from "@pages/Home/pages/Dashboard/DashboardPage";
-import { AddProjectPage } from "@pages/Home/pages/AddProject/AddProjectPage";
+import { DashboardPage } from "@pages/Home/pages/DashboardPage";
+import { AddProjectPage } from "@pages/Home/pages/AddProjectPage";
+import { ProjectsPage } from "@pages/Home/pages/ProjectsPage";
 
 
 export const homeRoutes = [
@@ -11,6 +10,12 @@ export const homeRoutes = [
         path: "/home/dashboard",
         name: "Dashboard",
         component: DashboardPage,
+        icon: Person
+    },
+    {
+        path: "/home/projects",
+        name: "Projects",
+        component: ProjectsPage,
         icon: Person
     },
     {
