@@ -1,12 +1,20 @@
 from classes.project import Project
 from datetime import datetime
-import json
+#import json
 from flask import request
 from dateutil.relativedelta import *
-
+from flask import json as flaskJson
 
 def parseDate(dateStr):
     return datetime.strptime(dateStr, "%Y-%m-%dT%H:%M:%S.%fZ")
+
+def makeResponse(jsonStr, app):
+    response = app.response_class(
+        response=jsonStr,
+        status=200,
+        mimetype='application/json'
+    )
+    return response
 
 class Refet:
     def __init__(self, db, app):
@@ -30,8 +38,8 @@ class Refet:
             val += pr.value(date)
         return val
 
-    def add_project(self, name="", equity = 0, currency='nis', irr = 0, start_date = datetime.now(), end_date = None):
-        pr = Project(name, equity, currency, irr , start_date , end_date )
+    def add_project(self, name="", equity = 0, currency='nis', irr = 0, description="", operator = "", type="", start_date = datetime.now(), end_date = None):
+        pr = Project(name, equity, currency, irr , description,operator, type, start_date , end_date )
 
         id = self._db.save_project(pr)
         pr._id = str(id)
@@ -45,7 +53,7 @@ class Refet:
         start_date = r['startDate']
         end_date = r['endDate']
         if id not in self._projects:
-            return json.dumps({'ok': False, 'error': 'id not found'})
+            return makeResponse(flaskJson.dumps({'ok': False, 'error': 'id not found'}), self._app)
         pr = self._projects[id]
         savedPRoj = deepcopy(pr)
         pr._name = r['name']
@@ -57,12 +65,12 @@ class Refet:
         pr._end_date = parseDate(end_date)
         updated = self._db.update_project(pr)
         if  updated:
-            ret =  json.dumps({'ok': True})
+            jsonStr =  flaskJson.dumps({'ok': True})
         else:
-            ret = json.dumps({'ok': False, 'error': 'id not found'})
+            jsonStr = flaskJson.dumps({'ok': False, 'error': 'id not found'})
             self._projects[id] = savedPRoj
-
-        return ret
+        response =  makeResponse(jsonStr, self._app)
+        return response
 
 
     def project(self):
@@ -80,27 +88,18 @@ class Refet:
         get all projects in json format
         :return:
         '''
-        from flask import jsonify
-        from flask import json as flaskJson
-
-        # json_string =  json.dumps( list(self._projects.values()), default=lambda o: o.__dict__ if not  isinstance(o, datetime) else o.isoformat() ,
-        #                   sort_keys=True, indent=4)
-
-        response = self._app.response_class(
-            response=json.dumps(list(self._projects.values()), default=lambda o: o.__dict__ if not  isinstance(o, datetime) else o.isoformat() ,
-                          sort_keys=True, indent=4),
-            status=200,
-            mimetype='application/json'
-        )
+        jsonStr  = flaskJson.dumps(list(self._projects.values()), default=lambda o: o.__dict__ if not  isinstance(o, datetime) else o.isoformat()+".000Z" ,
+                          sort_keys=True, indent=4)
+        response =  makeResponse(jsonStr, self._app)
         return response
-        #g = jsonify(json_string)
-        #return  g
-
 
     def stats(self):
         stats = {}
         stats['currentValue'] = self.get_value(datetime.now())
-        return json.dumps(stats)
+        jsonStr =  flaskJson.dumps(stats)
+        response = makeResponse(jsonStr, self._app)
+
+        return response
 
 
     def valueGraph(self):
@@ -115,11 +114,9 @@ class Refet:
             ret[dt.isoformat()] = self.get_value(dt)
             dt += relativedelta(months=+int(interval))
 
-
-        return json.dumps(ret)
-
-
-
+        jsonStr =  flaskJson.dumps(ret)
+        response = makeResponse(jsonStr, self._app)
+        return response
 
 
     def add_projectR(self):
@@ -127,7 +124,12 @@ class Refet:
          start_date = r['startDate']
          end_date = r['endDate']
 
-         id = self.add_project(r['name'], equity = r['equity'], currency=r['currency'], irr = r['irr'],
+         id = self.add_project(r['name'], equity = r['equity'], currency=r['currency'], irr = r['irr'], description=r['description'],
+                               operator = r['operator'] if 'operator' in r else "",
+                               type = r['type'] if 'type' in r else "",
                           start_date = parseDate(start_date),
                           end_date= parseDate(end_date) )
-         return json.dumps({'ok': True, 'id':str(id)})
+         jsonStr =  flaskJson.dumps({'ok': True, 'id':str(id)})
+
+         response = makeResponse(jsonStr, self._app)
+         return response

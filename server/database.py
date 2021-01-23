@@ -17,7 +17,7 @@ class Database:
         :return: project id in the database
         '''
         project = Project(name=project._name, start_date=project._start_date, end_date=project._end_date, irr=project._irr,
-                          start_equity=project._equity, currency=project._currency, type = project._type )
+                          start_equity=project._equity, currency=project._currency, type = project._type, description = project._description )
 
         project.save()
         return project.id
@@ -33,6 +33,9 @@ class Database:
                 pr.equity = project._equity
                 pr.currency = project._currency
                 pr.type = project._type
+                pr.description = project._description
+                pr.operator = project._operator
+
                 pr.save()
                 return True
         return False

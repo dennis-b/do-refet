@@ -6,15 +6,16 @@ from json import JSONEncoder
 
 class Project:
 
-    def __init__(self, name="", equity = 0, currency='nis', irr = 0, start_date = datetime.now(), end_date = None):
+    def __init__(self, name="", equity = 0, currency='nis', irr = 0, description = "",operator="", type="", start_date = datetime.now(), end_date = None):
         self._name = name
         self._irr = irr
         self._start_date = start_date
         self._end_date = end_date
         self._equity = equity
         self._currency = currency
-        self._type = ""
-        self._description = ""
+        self._operator = operator
+        self._type = type
+        self._description = description
         self._id = ""
 
 
@@ -39,6 +40,9 @@ class Project:
         self._irr = proj.irr
         self._currency = proj.currency
         self._id = str(proj.id)
+        self._description = proj.description
+        self._operator = proj.operator
+        self._type = proj.type
 
 
 

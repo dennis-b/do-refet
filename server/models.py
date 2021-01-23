@@ -40,6 +40,7 @@ class Project(Document):
     currency  = StringField()
     type = StringField(default="")
     description = StringField(default="")
+    operator = StringField(default="")
 
     # department = ReferenceField(Department)
     # roles = ListField(ReferenceField(Role))
