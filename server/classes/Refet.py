@@ -96,6 +96,7 @@ class Refet:
     def stats(self):
         stats = {}
         stats['currentValue'] = self.get_value(datetime.now())
+        stats['valueGraph'] = self.valueGraph()
         jsonStr =  flaskJson.dumps(stats)
         response = makeResponse(jsonStr, self._app)
 
@@ -103,7 +104,7 @@ class Refet:
 
 
     def valueGraph(self):
-        ret = {}
+        ret = []
         start = request.args.get('startDate')
         end = request.args.get('endDate')
         interval = request.args.get('interval')
@@ -111,12 +112,12 @@ class Refet:
         endDate = parseDate(end)
         dt = startDate
         while dt <= endDate:
-            ret[dt.isoformat()] = self.get_value(dt)
+            ret.append( { 'date' :dt.isoformat() +".000Z", 'value' : self.get_value(dt)})
             dt += relativedelta(months=+int(interval))
-
-        jsonStr =  flaskJson.dumps(ret)
-        response = makeResponse(jsonStr, self._app)
-        return response
+        return ret
+        #jsonStr =  flaskJson.dumps(ret)
+        #response = makeResponse(jsonStr, self._app)
+        #return response
 
 
     def add_projectR(self):
