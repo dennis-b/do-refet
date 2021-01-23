@@ -1,8 +1,8 @@
 import Person from "@material-ui/icons/Person";
 import Notifications from "@material-ui/icons/Notifications";
-import { DashboardPage } from "@pages/Home/pages/DashboardPage";
-import { AddProjectPage } from "@pages/Home/pages/AddProjectPage";
-import { ProjectsPage } from "@pages/Home/pages/ProjectsPage";
+import { DashboardPage } from "@pages/Home/pages/Dashboard/DashboardPage";
+import { AddProjectPage } from "@pages/Home/pages/Project/AddProjectPage";
+import { ProjectsPage } from "@pages/Home/pages/Project/ProjectsPage";
 
 
 export const homeRoutes = [

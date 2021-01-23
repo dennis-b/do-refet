@@ -18,7 +18,7 @@ export function App() {
         <Router history={hist}>
             <RecoilRoot>
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                    <RestfulProvider base="http://localhost:59678/">
+                    <RestfulProvider base="http://localhost:59678/api/">
                         <StyledAppRoot>
                             <Switch>
                                 {appRoutes.map(({ path, component, name }, key) => (

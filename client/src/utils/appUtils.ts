@@ -1,4 +1,5 @@
 import camelCase from "lodash/camelCase";
+import moment from "moment";
 
 export const noop = () => {
 }
@@ -19,5 +20,11 @@ export function responseResolver(data: any) {
         return data.map((item => toCamelCase(item)))
     }
     return toCamelCase(data)
+}
 
+export function normalizeGraphData(data: any[]) {
+    return data.map(({ date, value }) => ({
+        date: moment(date).format('DD/MM/YYYY'),
+        value
+    }))
 }

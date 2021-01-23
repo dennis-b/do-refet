@@ -1,8 +1,9 @@
 import React from 'react';
-import { StyledRoot } from "@pages/Home/components/styled";
-import { ProjectForm, ProjectValues } from "@pages/Home/components/Projects/ProjectForm";
 import { useMutate } from "restful-react";
 import { useHistory } from "react-router";
+
+import { StyledRoot } from "@pages/Home/components/styled";
+import { ProjectForm, ProjectValues } from "./components/Projects/ProjectForm";
 
 export const AddProjectPage = () => {
 
