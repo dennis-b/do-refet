@@ -4,6 +4,7 @@ from datetime import datetime
 from flask import request
 from dateutil.relativedelta import *
 from flask import json as flaskJson
+from classes.currency import CurrencyConverter
 
 def parseDate(dateStr):
     return datetime.strptime(dateStr, "%Y-%m-%dT%H:%M:%S.%fZ")
@@ -23,6 +24,7 @@ class Refet:
         self._projects = {}
         self._read_projects_from_db()
         self._app = app
+        self._converter = CurrencyConverter()
 
     def _read_projects_from_db(self):
         from models import Project as aProject
@@ -32,13 +34,16 @@ class Refet:
             pr.load_from_db(post)
             self._projects[pr._id] = pr
 
-    def get_value(self, date):
+
+    def get_value(self, date, currency = 'ILS'):
         val = 0
         for pr in self._projects.values():
-            val += pr.value(date)
+            tempVal = pr.value(date)
+            currVal = self._converter.convert(tempVal, date, pr._currency, currency)
+            val += currVal
         return val
 
-    def add_project(self, name="", equity = 0, currency='nis', irr = 0, description="", operator = "", type="", start_date = datetime.now(), end_date = None):
+    def add_project(self, name="", equity = 0, currency='ILS', irr = 0, description="", operator = "", type="", start_date = datetime.now(), end_date = None):
         pr = Project(name, equity, currency, irr , description,operator, type, start_date , end_date )
 
         id = self._db.save_project(pr)
@@ -93,31 +98,43 @@ class Refet:
         response =  makeResponse(jsonStr, self._app)
         return response
 
-    def stats(self):
+
+
+    def statsDict(self):
         stats = {}
         stats['currentValue'] = self.get_value(datetime.now())
-        stats['valueGraph'] = self.valueGraph()
+        stats['valueGraph'] = self._valueGraph()
+        return stats
+
+    def stats(self):
+        '''
+        :return: statistics
+        '''
+
+        if 'id' in request.args:
+            id = request.args['id']
+            project = self._projects[id]
+            stats =  project.statsDict()
+        else:
+            stats = self.statsDict()
         jsonStr =  flaskJson.dumps(stats)
         response = makeResponse(jsonStr, self._app)
-
         return response
 
 
-    def valueGraph(self):
+    def _valueGraph(self):
         ret = []
-        start = request.args.get('startDate')
-        end = request.args.get('endDate')
-        interval = request.args.get('interval')
-        startDate = parseDate(start)
-        endDate = parseDate(end)
+        interval = 1
+        projects = list(self._projects.values())
+        projects = sorted(projects, key = lambda x: x._start_date)
+        startDate = projects[0]._start_date #smallest start date
+        endDate = datetime.now()
         dt = startDate
         while dt <= endDate:
             ret.append( { 'date' :dt.isoformat() +".000Z", 'value' : self.get_value(dt)})
             dt += relativedelta(months=+int(interval))
+        ret.append({'date': endDate.isoformat() + ".000Z", 'value': self.get_value(endDate)})
         return ret
-        #jsonStr =  flaskJson.dumps(ret)
-        #response = makeResponse(jsonStr, self._app)
-        #return response
 
 
     def add_projectR(self):

@@ -7,7 +7,8 @@ from mongoengine.fields import (
     ReferenceField,
     StringField,
     FloatField,
-    IntField
+    IntField,
+    DictField
 )
 
 
@@ -41,8 +42,16 @@ class Project(Document):
     type = StringField(default="")
     description = StringField(default="")
     operator = StringField(default="")
+    equities_per_date = ListField( DictField())
 
     # department = ReferenceField(Department)
     # roles = ListField(ReferenceField(Role))
     # leader = ReferenceField("Employee")
     # tasks = ListField(EmbeddedDocumentField(Task))
+
+
+class Rates(Document):
+    meta = {"collection": "Rates"}
+    date = DateTimeField(default=datetime.now())
+    base = StringField(default='ILS')
+    rates = DictField()

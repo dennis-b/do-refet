@@ -1,12 +1,11 @@
 
 from datetime import datetime
-from classes.currency import get_currency
 import json
-from json import JSONEncoder
+from dateutil.relativedelta import *
 
 class Project:
 
-    def __init__(self, name="", equity = 0, currency='nis', irr = 0, description = "",operator="", type="", start_date = datetime.now(), end_date = None):
+    def __init__(self, name="", equity = 0, currency='ILS', irr = 0, description = "",operator="", type="", start_date = datetime.now(), end_date = None):
         self._name = name
         self._irr = irr
         self._start_date = start_date
@@ -17,6 +16,7 @@ class Project:
         self._type = type
         self._description = description
         self._id = ""
+        self._equities_per_date = []
 
 
     def value(self, date):
@@ -31,6 +31,40 @@ class Project:
         value = self._equity+increase
         return value
 
+    def _valueGraph(self):
+        '''
+        get project value in a graph
+        :return: list of dictionaries of date, value
+        '''
+        ret = []
+
+        if self._equities_per_date:
+            vals =  [ {self._start_date:self._equity} ]+self._equities_per_date
+            for v in vals:
+                ret.append( { 'date' :list(v.keys())[0].isoformat() +".000Z", 'value' : list(v.values())[0]} )
+            return ret
+
+        interval = 1
+        startDate = self._start_date #smallest start date
+        endDate = datetime.now()
+        dt = startDate
+        while dt <= endDate:
+            ret.append( { 'date' :dt.isoformat() +".000Z", 'value' : self.value(dt)})
+            dt += relativedelta(months=+int(interval))
+        ret.append({'date': endDate.isoformat() + ".000Z", 'value': self.get_value(endDate)})
+        return ret
+
+    def statsDict(self):
+        '''
+        get project statistics
+        :return: dict of project statistics
+        '''
+        stats = {}
+        stats['currentValue'] = self.value(datetime.now())
+        stats['valueGraph'] = self._valueGraph()
+        return stats
+
+
     def load_from_db(self, proj):
 
         self._name = proj.name
@@ -43,6 +77,7 @@ class Project:
         self._description = proj.description
         self._operator = proj.operator
         self._type = proj.type
+        self._equities_per_date =proj.equities_per_date
 
 
 
@@ -54,7 +89,7 @@ class Project:
 
 if __name__=="__main__":
 
-    p = Project("test", equity=60000, currency="usd", irr=11.5, start_date=datetime(2020,1,1), end_date= datetime(2023,1,1))
+    p = Project("test", equity=60000, currency="USD", irr=11.5, start_date=datetime(2020,1,1), end_date= datetime(2023,1,1))
     s = p.toJSON()
     print(s)
     #s = json.dump(p, fp = open("pr.json", 'w'))
