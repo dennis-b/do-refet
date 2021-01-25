@@ -1,9 +1,11 @@
 import React from 'react';
-import { Field, Formik } from 'formik';
-import { Box, Button, Grid, LinearProgress } from "@material-ui/core";
-import { DatePicker } from "formik-material-ui-pickers";
-import { TextField } from "formik-material-ui";
-import { StyledForm } from '../styled';
+import {Field, Formik} from 'formik';
+import {Box, Button, Grid, LinearProgress, MenuItem} from "@material-ui/core";
+import {DatePicker} from "formik-material-ui-pickers";
+import {TextField} from "formik-material-ui";
+import {StyledForm} from '../styled';
+import {projectTypes} from "@pages/Home/pages/Project/components/Projects/models";
+import {CurrencyAutoCompleteField} from "@components/TextField/CurrencyAutoCompleteField";
 
 export interface ProjectValues {
     name: string;
@@ -13,6 +15,7 @@ export interface ProjectValues {
     irr: string;
     equity: string;
     currency: string;
+    projectType: string;
 }
 
 const defValues: ProjectValues = {
@@ -23,9 +26,10 @@ const defValues: ProjectValues = {
     irr: '',
     equity: '',
     currency: '',
+    projectType: '',
 }
 
-export const ProjectForm = ({ onSubmit }: any) => {
+export const ProjectForm = ({onSubmit}: any) => {
 
     const onSubmitInner = (values: any, formikBug: any) => {
         setTimeout(() => {
@@ -40,7 +44,7 @@ export const ProjectForm = ({ onSubmit }: any) => {
             initialValues={defValues}
             onSubmit={onSubmitInner}
         >
-            {({ submitForm, isSubmitting }) => (
+            {({submitForm, isSubmitting, errors, touched}) => (
                 <StyledForm>
                     <Field
                         component={TextField}
@@ -86,6 +90,40 @@ export const ProjectForm = ({ onSubmit }: any) => {
                         <Grid container spacing={4}>
                             <Grid item xs={6}>
                                 <Field
+                                    component={TextField}
+                                    type="text"
+                                    name="projectType"
+                                    label="Project Type"
+                                    select
+                                    variant="standard"
+                                    helperText="Please select Type"
+                                    margin="normal"
+                                    InputLabelProps={{shrink: true}}
+                                    fullWidth
+                                >
+                                    {projectTypes.map((option) => (
+                                        <MenuItem key={option.value} value={option.value}>
+                                            {option.label}
+                                        </MenuItem>
+                                    ))}
+                                </Field>
+                            </Grid>
+                            <Grid item xs={6}>
+                                <CurrencyAutoCompleteField
+                                    errors={errors}
+                                    touched={touched}
+                                    name='currency'
+                                    label='select'
+                                />
+                            </Grid>
+                        </Grid>
+                    </Box>
+
+
+                    <Box mt={2}>
+                        <Grid container spacing={4}>
+                            <Grid item xs={6}>
+                                <Field
                                     component={DatePicker}
                                     name="startDate"
                                     label="Start Date"
@@ -103,7 +141,7 @@ export const ProjectForm = ({ onSubmit }: any) => {
                         </Grid>
 
                     </Box>
-                    {isSubmitting && <LinearProgress />}
+                    {isSubmitting && <LinearProgress/>}
                     <Box mt={2}>
                         <Button
                             variant="contained"

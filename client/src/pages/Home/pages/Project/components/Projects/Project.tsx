@@ -2,7 +2,7 @@ import React from 'react';
 import { makeStyles } from "@material-ui/core/styles";
 import { Button, Card, CardActionArea, CardActions, CardContent, CardMedia, Grid, Typography } from "@material-ui/core";
 import { AppAssets } from "@assets/index";
-import { ProjectModel } from "@pages/Home/state";
+import { ProjectModel } from "@pages/Home/pages/Project/state";
 
 
 const useStyles = makeStyles({

@@ -3,13 +3,13 @@ import { useRecoilState } from "recoil";
 import { Box, Fab, Typography } from '@material-ui/core';
 import { useHistory } from "react-router";
 import AddIcon from '@material-ui/icons/Add';
-
-import { Projects } from "@pages/Home/components/Projects/Projects";
-import { StyledRoot } from "@pages/Home/components/styled";
-
-import { projectsState } from "../state";
 import { useGet } from "restful-react";
+
+import { StyledRoot } from "@pages/Home/components/styled";
 import { responseResolver } from "@utils/appUtils";
+
+import { projectsState } from "./state";
+import { Projects } from "./components/Projects/Projects";
 
 export const ProjectsPage = () => {
 
