@@ -38,6 +38,7 @@ class Project:
         '''
         ret = []
 
+
         if self._equities_per_date:
             vals =  [ {self._start_date:self._equity} ]+self._equities_per_date
             for v in vals:
