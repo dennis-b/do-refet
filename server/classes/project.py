@@ -11,6 +11,7 @@ class Project:
         self._start_date = start_date
         self._end_date = end_date
         self._equity = float(equity)
+
         self._currency = currency
         self._operator = operator
         self._type = type
