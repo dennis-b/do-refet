@@ -9,7 +9,7 @@ import { StyledRoot } from "@pages/Home/components/styled";
 import { responseResolver } from "@utils/appUtils";
 
 import { projectsState } from "./state";
-import { Projects } from "./components/Projects/Projects";
+import { Projects } from "./components/Projects";
 
 export const ProjectsPage = () => {
 

@@ -3,7 +3,7 @@ import { useMutate } from "restful-react";
 import { useHistory } from "react-router";
 
 import { StyledRoot } from "@pages/Home/components/styled";
-import { ProjectForm, ProjectValues } from "./components/Projects/ProjectForm";
+import { ProjectForm, ProjectValues } from "./components/ProjectForm";
 
 export const AddProjectPage = () => {
 

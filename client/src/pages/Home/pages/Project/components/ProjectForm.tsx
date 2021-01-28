@@ -1,11 +1,12 @@
 import React from 'react';
-import {Field, Formik} from 'formik';
-import {Box, Button, Grid, LinearProgress, MenuItem} from "@material-ui/core";
-import {DatePicker} from "formik-material-ui-pickers";
-import {TextField} from "formik-material-ui";
-import {StyledForm} from '../styled';
-import {projectTypes} from "@pages/Home/pages/Project/components/Projects/models";
-import {CurrencyAutoCompleteField} from "@components/TextField/CurrencyAutoCompleteField";
+import { Field, Formik } from 'formik';
+import { Box, Button, Grid, LinearProgress, MenuItem } from "@material-ui/core";
+import { DatePicker } from "formik-material-ui-pickers";
+import { TextField } from "formik-material-ui";
+import { CurrencyAutoCompleteField } from "@components/TextField/CurrencyAutoCompleteField";
+import { ProjectType } from "@shared/models";
+import { StyledForm } from './styled';
+import { datePickerLabel } from "@utils/appUtils";
 
 export interface ProjectValues {
     name: string;
@@ -29,7 +30,9 @@ const defValues: ProjectValues = {
     projectType: '',
 }
 
-export const ProjectForm = ({onSubmit}: any) => {
+const projectTypes = Object.values(ProjectType);
+
+export const ProjectForm = ({ onSubmit }: any) => {
 
     const onSubmitInner = (values: any, formikBug: any) => {
         setTimeout(() => {
@@ -44,7 +47,7 @@ export const ProjectForm = ({onSubmit}: any) => {
             initialValues={defValues}
             onSubmit={onSubmitInner}
         >
-            {({submitForm, isSubmitting, errors, touched}) => (
+            {({ submitForm, isSubmitting, errors, touched }) => (
                 <StyledForm>
                     <Field
                         component={TextField}
@@ -78,14 +81,6 @@ export const ProjectForm = ({onSubmit}: any) => {
                         width={'70%'}
                         fullWidth
                     />
-                    <Field
-                        component={TextField}
-                        name="currency"
-                        type="text"
-                        label="currency"
-                        width={'70%'}
-                        fullWidth
-                    />
                     <Box mt={2}>
                         <Grid container spacing={4}>
                             <Grid item xs={6}>
@@ -98,12 +93,12 @@ export const ProjectForm = ({onSubmit}: any) => {
                                     variant="standard"
                                     helperText="Please select Type"
                                     margin="normal"
-                                    InputLabelProps={{shrink: true}}
+                                    InputLabelProps={{ shrink: true }}
                                     fullWidth
                                 >
                                     {projectTypes.map((option) => (
-                                        <MenuItem key={option.value} value={option.value}>
-                                            {option.label}
+                                        <MenuItem key={option} value={option}>
+                                            {option}
                                         </MenuItem>
                                     ))}
                                 </Field>
@@ -127,6 +122,7 @@ export const ProjectForm = ({onSubmit}: any) => {
                                     component={DatePicker}
                                     name="startDate"
                                     label="Start Date"
+                                    labelFunc={datePickerLabel}
                                     fullWidth
                                 />
                             </Grid>
@@ -135,13 +131,14 @@ export const ProjectForm = ({onSubmit}: any) => {
                                     component={DatePicker}
                                     name="endDate"
                                     label="End Date"
+                                    labelFunc={datePickerLabel}
                                     fullWidth
                                 />
                             </Grid>
                         </Grid>
 
                     </Box>
-                    {isSubmitting && <LinearProgress/>}
+                    {isSubmitting && <LinearProgress />}
                     <Box mt={2}>
                         <Button
                             variant="contained"

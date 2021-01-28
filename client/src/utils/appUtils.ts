@@ -1,5 +1,6 @@
 import camelCase from "lodash/camelCase";
 import moment from "moment";
+import { MaterialUiPickersDate } from "@material-ui/pickers/typings/date";
 
 export const noop = () => {
 }
@@ -28,3 +29,11 @@ export function normalizeGraphData(data: any[]) {
         value
     }))
 }
+
+export function datePickerLabel(date: MaterialUiPickersDate) {
+    return moment(date).format('DD/MM/YYYY')
+}
+
+export const numberFormat = new Intl.NumberFormat('en', {
+    maximumFractionDigits: 0
+});

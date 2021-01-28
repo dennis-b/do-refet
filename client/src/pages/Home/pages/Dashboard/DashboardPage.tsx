@@ -3,7 +3,7 @@ import { Box, Grid, Typography } from '@material-ui/core';
 import { StyledRoot } from "@pages/Home/components/styled";
 import { DashboardIrrGraph } from "@pages/Home/pages/Dashboard/component/DashboardIrrGraph";
 import { useGet } from "restful-react";
-import { normalizeGraphData } from "@utils/appUtils";
+import { normalizeGraphData, numberFormat } from "@utils/appUtils";
 import { useRecoilState } from "recoil";
 import { dashboardState, Stats } from "@pages/Home/pages/Dashboard/state";
 import { CardWithHeader } from "@components/Card/CardWithHeader";
@@ -30,7 +30,7 @@ export const DashboardPage = () => {
                 <Grid item xs={4}>
                     <CardWithHeader title='Total Refet Value'>
                         <Typography variant="h5" component="h5">
-                            {currentValue}
+                            {numberFormat.format(currentValue)}
                         </Typography>
                     </CardWithHeader>
                 </Grid>
