@@ -7,10 +7,10 @@ class Project:
 
     def __init__(self, name="", equity = 0, currency='ILS', irr = 0, description = "",operator="", type="", start_date = datetime.now(), end_date = None):
         self._name = name
-        self._irr = irr
+        self._irr = float(irr)
         self._start_date = start_date
         self._end_date = end_date
-        self._equity = equity
+        self._equity = float(equity)
         self._currency = currency
         self._operator = operator
         self._type = type
@@ -26,6 +26,8 @@ class Project:
             date =self._end_date
 
         durration = ((date-self._start_date).days)/364
+        if durration ==0:
+            return self._equity
         valueIrr = durration *self._irr
         increase = self._equity*(valueIrr/100)
         value = self._equity+increase
