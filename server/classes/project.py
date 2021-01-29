@@ -1,5 +1,5 @@
 
-from datetime import datetime
+from datetime import datetime, date
 import json
 from dateutil.relativedelta import *
 
@@ -20,6 +20,9 @@ class Project:
         self._equities_per_date = []
 
 
+
+
+
     def value(self, date):
         if date < self._start_date:
             return 0
@@ -33,6 +36,24 @@ class Project:
         increase = self._equity*(valueIrr/100)
         value = self._equity+increase
         return value
+
+
+    def invested_value(self):
+        return self._equity
+
+    def investedValueGraph(self):
+        ret = []
+        interval = 1
+        startDate = self._start_date  # smallest start date
+        endDate = datetime.now()
+        endDate = date(endDate.year, endDate.month, endDate.day)
+        dt = startDate
+        while dt <= endDate:
+            ret.append({'date': dt.isoformat() + ".000Z", 'value': self.invested_value()})
+            dt += relativedelta(months=+int(interval))
+        ret.append({'date': endDate.isoformat() + ".000Z", 'value': self.invested_value(endDate)})
+        return ret
+
 
     def _valueGraph(self):
         '''
@@ -51,11 +72,12 @@ class Project:
         interval = 1
         startDate = self._start_date #smallest start date
         endDate = datetime.now()
+
         dt = startDate
         while dt <= endDate:
             ret.append( { 'date' :dt.isoformat() +".000Z", 'value' : self.value(dt)})
             dt += relativedelta(months=+int(interval))
-        ret.append({'date': endDate.isoformat() + ".000Z", 'value': self.get_value(endDate)})
+        ret.append({'date': date(endDate.year, endDate.month, endDate.day).isoformat() + ".000Z", 'value': self.value(endDate)})
         return ret
 
     def statsDict(self):
@@ -66,6 +88,7 @@ class Project:
         stats = {}
         stats['currentValue'] = self.value(datetime.now())
         stats['valueGraph'] = self._valueGraph()
+        stats['id'] = self._id
         return stats
 
 

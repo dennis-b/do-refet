@@ -15,14 +15,15 @@ def main():
   #j = refet.getProjectsJson()
 
   app.add_url_rule(
-             "/api/project", "project", refet.project,  methods=[ 'GET', 'POST', 'PUT']
+             "/api/projects",  "project", refet.project,  methods=[ 'GET', 'POST', 'PUT']
          )
   app.add_url_rule(
     "/api/stats", "stats", refet.stats, methods=['GET']
   )
 
+
   #app.add_url_rule( "/api/refetValue", 'refetvalue', refet.valueGraph, methods = [ 'GET' ])
-  app.run(port=59678)
+  app.run(port=59800)
 
 if __name__ == "__main__":
   main()

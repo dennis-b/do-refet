@@ -1,5 +1,5 @@
 from classes.project import Project
-from datetime import datetime
+from datetime import datetime, date
 #import json
 from flask import request
 from dateutil.relativedelta import *
@@ -43,6 +43,16 @@ class Refet:
             val += currVal
         return val
 
+    def get_invested_value(self, date, currency = 'ILS'):
+        val = 0
+        for pr in self._projects.values():
+            tempVal = pr.invested_value()
+            currVal = self._converter.convert(tempVal, date, pr._currency, currency)
+            val += currVal
+        return val
+
+
+
     def add_project(self, name="", equity = 0, currency='ILS', irr = 0, description="", operator = "", type="", start_date = datetime.now(), end_date = None):
         pr = Project(name, equity, currency, irr , description,operator, type, start_date , end_date )
 
@@ -78,15 +88,30 @@ class Refet:
         return response
 
 
-    def project(self):
-        if request.method == 'POST':
-            return self.add_projectR()
-        elif request.method == 'GET':
-            return self.getProjectsJson()
-        elif request.method == 'PUT':
-            return self.updateProject()
-        raise NotImplementedError("only get and post are supported")
+    def _getProjecStats(self):
+        id = request.args['id']
+        project = self._projects[id]
+        stats = project.statsDict()
+        return stats
 
+    def _getProjectParams(self):
+        id = request.args['id']
+        project = self._projects[id]
+        jsonStr = project.toJSON()
+        response = makeResponse(jsonStr, self._app)
+        return response
+
+    def project(self):
+        if 'id' in request.args:
+            return self._getProjectParams()
+        else:
+            if request.method == 'POST':
+                return self.add_projectR()
+            elif request.method == 'GET':
+                return self.getProjectsJson()
+            elif request.method == 'PUT':
+                return self.updateProject()
+            raise NotImplementedError("only get and post are supported")
 
     def getProjectsJson(self):
         '''
@@ -98,12 +123,11 @@ class Refet:
         response =  makeResponse(jsonStr, self._app)
         return response
 
-
-
     def statsDict(self):
         stats = {}
         stats['currentValue'] = self.get_value(datetime.now())
         stats['valueGraph'] = self._valueGraph()
+        stats['investedValueGraph'] = self._investedValueGraph()
         return stats
 
     def stats(self):
@@ -112,15 +136,12 @@ class Refet:
         '''
 
         if 'id' in request.args:
-            id = request.args['id']
-            project = self._projects[id]
-            stats =  project.statsDict()
+            stats =  self._getProjecStats()
         else:
             stats = self.statsDict()
         jsonStr =  flaskJson.dumps(stats)
         response = makeResponse(jsonStr, self._app)
         return response
-
 
     def _valueGraph(self):
         ret = []
@@ -134,6 +155,21 @@ class Refet:
             ret.append( { 'date' :dt.isoformat() +".000Z", 'value' : self.get_value(dt)})
             dt += relativedelta(months=+int(interval))
         ret.append({'date': endDate.isoformat() + ".000Z", 'value': self.get_value(endDate)})
+        return ret
+
+
+    def _investedValueGraph(self):
+        ret = []
+        interval = 1
+        projects = list(self._projects.values())
+        projects = sorted(projects, key=lambda x: x._start_date)
+        startDate = projects[0]._start_date  # smallest start date
+        endDate = datetime.now()
+        dt = startDate
+        while dt <= endDate:
+            ret.append({'date': dt.isoformat() + ".000Z", 'value': self.get_invested_value(dt)})
+            dt += relativedelta(months=+int(interval))
+        ret.append({'date': date(endDate.year, endDate.month, endDate.day).isoformat() + ".000Z", 'value': self.get_invested_value(endDate)})
         return ret
 
 
