@@ -19,18 +19,18 @@ def makeResponse(jsonStr, app):
 
 class Refet:
     def __init__(self, db, app):
-
         self._db  = db
+        self._converter = CurrencyConverter()
         self._projects = {}
         self._read_projects_from_db()
         self._app = app
-        self._converter = CurrencyConverter()
+
 
     def _read_projects_from_db(self):
         from models import Project as aProject
 
         for post in aProject.objects:
-            pr = Project()
+            pr = Project(self._converter)
             pr.load_from_db(post)
             self._projects[pr._id] = pr
 
@@ -38,23 +38,21 @@ class Refet:
     def get_value(self, date, currency = 'ILS'):
         val = 0
         for pr in self._projects.values():
-            tempVal = pr.value(date)
-            currVal = self._converter.convert(tempVal, date, pr._currency, currency)
-            val += currVal
+            tempVal = pr.value(date, currency)
+            val += tempVal
         return val
 
     def get_invested_value(self, date, currency = 'ILS'):
         val = 0
         for pr in self._projects.values():
-            tempVal = pr.invested_value( date )
-            currVal = self._converter.convert(tempVal, date, pr._currency, currency)
-            val += currVal
+            tempVal = pr.invested_value( date, currency )
+            val += tempVal
         return val
 
 
 
     def add_project(self, name="", equity = 0, currency='ILS', irr = 0, description="", operator = "", type="", start_date = datetime.now(), end_date = None):
-        pr = Project(name, equity, currency, irr , description,operator, type, start_date , end_date )
+        pr = Project(self._converter,name, equity, currency, irr , description,operator, type, start_date , end_date )
 
         id = self._db.save_project(pr)
         pr._id = str(id)
@@ -118,7 +116,16 @@ class Refet:
         get all projects in json format
         :return:
         '''
-        jsonStr  = flaskJson.dumps(list(self._projects.values()), default=lambda o: o.__dict__ if not  isinstance(o, datetime) else o.isoformat()+".000Z" ,
+        def defaultFunc(o):
+            if isinstance(o, datetime):
+                return o.isoformat()+".000Z"
+            elif isinstance(o, CurrencyConverter):
+                return ''
+            else:
+                return o.__dict__
+                
+
+        jsonStr  = flaskJson.dumps(list(self._projects.values()), default=defaultFunc ,
                           sort_keys=True, indent=4)
         response =  makeResponse(jsonStr, self._app)
         return response
