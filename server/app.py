@@ -23,7 +23,7 @@ def main():
 
 
   #app.add_url_rule( "/api/refetValue", 'refetvalue', refet.valueGraph, methods = [ 'GET' ])
-  app.run(port=59800)
+  app.run(port=59678)
 
 if __name__ == "__main__":
   main()

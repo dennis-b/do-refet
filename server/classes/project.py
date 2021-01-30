@@ -38,21 +38,12 @@ class Project:
         return value
 
 
-    def invested_value(self):
-        return self._equity
+    def invested_value(self, date):
+        invested_value =  self._equity if date >= self._start_date and date <= self._end_date else 0
+        return invested_value
 
-    def investedValueGraph(self):
-        ret = []
-        interval = 1
-        startDate = self._start_date  # smallest start date
-        endDate = datetime.now()
-        endDate = date(endDate.year, endDate.month, endDate.day)
-        dt = startDate
-        while dt <= endDate:
-            ret.append({'date': dt.isoformat() + ".000Z", 'value': self.invested_value()})
-            dt += relativedelta(months=+int(interval))
-        ret.append({'date': endDate.isoformat() + ".000Z", 'value': self.invested_value(endDate)})
-        return ret
+
+
 
 
     def _valueGraph(self):
@@ -66,7 +57,10 @@ class Project:
         if self._equities_per_date:
             vals =  [ {self._start_date:self._equity} ]+self._equities_per_date
             for v in vals:
-                ret.append( { 'date' :list(v.keys())[0].isoformat() +".000Z", 'value' : list(v.values())[0]} )
+                dt = list(v.keys())[0]
+                ret.append( { 'date' :dt.isoformat() +".000Z",
+                              'value' : list(v.values())[0],
+                              'invested_value': self.invested_value(dt)} )
             return ret
 
         interval = 1
@@ -75,12 +69,16 @@ class Project:
 
         dt = startDate
         while dt <= endDate:
-            ret.append( { 'date' :dt.isoformat() +".000Z", 'value' : self.value(dt)})
+            ret.append( { 'date' :dt.isoformat() +".000Z",
+                          'value' : self.value(dt),
+                          'invested_value': self.invested_value(dt)})
             dt += relativedelta(months=+int(interval))
-        ret.append({'date': date(endDate.year, endDate.month, endDate.day).isoformat() + ".000Z", 'value': self.value(endDate)})
+        ret.append({'date': endDate.isoformat() + "Z",
+                    'value': self.value(endDate),
+                    'invested_value' : self.invested_value(endDate)})
         return ret
 
-    def statsDict(self):
+    def statsDict(self, _converter):
         '''
         get project statistics
         :return: dict of project statistics

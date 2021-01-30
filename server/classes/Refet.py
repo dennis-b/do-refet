@@ -46,7 +46,7 @@ class Refet:
     def get_invested_value(self, date, currency = 'ILS'):
         val = 0
         for pr in self._projects.values():
-            tempVal = pr.invested_value()
+            tempVal = pr.invested_value( date )
             currVal = self._converter.convert(tempVal, date, pr._currency, currency)
             val += currVal
         return val
@@ -91,7 +91,7 @@ class Refet:
     def _getProjecStats(self):
         id = request.args['id']
         project = self._projects[id]
-        stats = project.statsDict()
+        stats = project.statsDict(self._converter)
         return stats
 
     def _getProjectParams(self):
@@ -127,7 +127,6 @@ class Refet:
         stats = {}
         stats['currentValue'] = self.get_value(datetime.now())
         stats['valueGraph'] = self._valueGraph()
-        stats['investedValueGraph'] = self._investedValueGraph()
         return stats
 
     def stats(self):
@@ -152,25 +151,30 @@ class Refet:
         endDate = datetime.now()
         dt = startDate
         while dt <= endDate:
-            ret.append( { 'date' :dt.isoformat() +".000Z", 'value' : self.get_value(dt)})
+            ret.append( { 'date' :dt.isoformat() +".000Z",
+                          'value' : self.get_value(dt),
+                          'invested_value' : self.get_invested_value(dt)})
+
             dt += relativedelta(months=+int(interval))
-        ret.append({'date': endDate.isoformat() + ".000Z", 'value': self.get_value(endDate)})
+        ret.append({'date': endDate.isoformat() + "Z",
+                    'value': self.get_value(endDate),
+                    'invested_value': self.get_invested_value(endDate)})
         return ret
 
-
-    def _investedValueGraph(self):
-        ret = []
-        interval = 1
-        projects = list(self._projects.values())
-        projects = sorted(projects, key=lambda x: x._start_date)
-        startDate = projects[0]._start_date  # smallest start date
-        endDate = datetime.now()
-        dt = startDate
-        while dt <= endDate:
-            ret.append({'date': dt.isoformat() + ".000Z", 'value': self.get_invested_value(dt)})
-            dt += relativedelta(months=+int(interval))
-        ret.append({'date': date(endDate.year, endDate.month, endDate.day).isoformat() + ".000Z", 'value': self.get_invested_value(endDate)})
-        return ret
+    #
+    # def _investedValueGraph(self):
+    #     ret = []
+    #     interval = 1
+    #     projects = list(self._projects.values())
+    #     projects = sorted(projects, key=lambda x: x._start_date)
+    #     startDate = projects[0]._start_date  # smallest start date
+    #     endDate = datetime.now()
+    #     dt = startDate
+    #     while dt <= endDate:
+    #         ret.append({'date': dt.isoformat() + ".000Z", 'value': self.get_invested_value(dt)})
+    #         dt += relativedelta(months=+int(interval))
+    #     ret.append({'date': endDate.isoformat() + "Z", 'value': self.get_invested_value(endDate)})
+    #     return ret
 
 
     def add_projectR(self):
