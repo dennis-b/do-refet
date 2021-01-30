@@ -7,6 +7,7 @@ import { CurrencyAutoCompleteField } from "@components/TextField/CurrencyAutoCom
 import { ProjectType } from "@shared/models";
 import { StyledForm } from './styled';
 import { datePickerLabel } from "@utils/appUtils";
+import { ProjectModel } from "@pages/Home/pages/Project/state";
 
 export interface ProjectValues {
     name: string;
@@ -32,7 +33,13 @@ const defValues: ProjectValues = {
 
 const projectTypes = Object.values(ProjectType);
 
-export const ProjectForm = ({ onSubmit }: any) => {
+interface Props {
+    onSubmit?: (values: any) => void;
+    project?: ProjectModel
+    display?: boolean
+}
+
+export const ProjectForm = ({ onSubmit, project, display }: Props) => {
 
     const onSubmitInner = (values: any, formikBug: any) => {
         setTimeout(() => {
@@ -42,28 +49,33 @@ export const ProjectForm = ({ onSubmit }: any) => {
         }, 500);
     }
 
+    const initialValues = project && Object.keys(project).length > 0 ? project : defValues;
+
     return (
         <Formik
-            initialValues={defValues}
+            initialValues={initialValues}
             onSubmit={onSubmitInner}
+            enableReinitialize
         >
             {({ submitForm, isSubmitting, errors, touched }) => (
                 <StyledForm>
+                    {!display &&
                     <Field
-                        component={TextField}
-                        name="name"
-                        type="text"
-                        label="name"
-                        width={'70%'}
-                        fullWidth
+                      component={TextField}
+                      name="name"
+                      type="text"
+                      label="name"
+                      fullWidth
+                      disabled={display}
                     />
+                    }
                     <Field
                         component={TextField}
                         name="description"
                         type="text"
                         label="description"
-                        width={'70%'}
                         fullWidth
+                        disabled={display}
                     />
                     <Field
                         component={TextField}
@@ -72,14 +84,15 @@ export const ProjectForm = ({ onSubmit }: any) => {
                         label="irr"
                         width={'70%'}
                         fullWidth
+                        disabled={display}
                     />
                     <Field
                         component={TextField}
                         name="equity"
                         type="text"
                         label="equity"
-                        width={'70%'}
                         fullWidth
+                        disabled={display}
                     />
                     <Box mt={2}>
                         <Grid container spacing={4}>
@@ -95,6 +108,7 @@ export const ProjectForm = ({ onSubmit }: any) => {
                                     margin="normal"
                                     InputLabelProps={{ shrink: true }}
                                     fullWidth
+                                    disabled={display}
                                 >
                                     {projectTypes.map((option) => (
                                         <MenuItem key={option} value={option}>
@@ -124,6 +138,7 @@ export const ProjectForm = ({ onSubmit }: any) => {
                                     label="Start Date"
                                     labelFunc={datePickerLabel}
                                     fullWidth
+                                    disabled={display}
                                 />
                             </Grid>
                             <Grid item xs={6}>
@@ -133,6 +148,7 @@ export const ProjectForm = ({ onSubmit }: any) => {
                                     label="End Date"
                                     labelFunc={datePickerLabel}
                                     fullWidth
+                                    disabled={display}
                                 />
                             </Grid>
                         </Grid>
@@ -140,14 +156,16 @@ export const ProjectForm = ({ onSubmit }: any) => {
                     </Box>
                     {isSubmitting && <LinearProgress />}
                     <Box mt={2}>
+                        {onSubmit &&
                         <Button
-                            variant="contained"
-                            color="primary"
-                            disabled={isSubmitting}
-                            onClick={submitForm}
+                          variant="contained"
+                          color="primary"
+                          disabled={isSubmitting}
+                          onClick={submitForm}
                         >
                             Submit
                         </Button>
+                        }
                     </Box>
                 </StyledForm>
             )}

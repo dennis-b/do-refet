@@ -1,12 +1,12 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 // import * as logo from "*.png";
 // import * as bgImage from "*.png";
-import {makeStyles} from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import styles from "@assets/jss/material-dashboard-react/layouts/adminStyle.js";
-import {Sidebar} from "@components/Sidebar/Sidebar";
-import {Navbar} from "@components/Navbars/Navbar";
-import {Redirect, Route, Switch} from "react-router-dom";
-import {homeRoutes} from "@pages/Home/homeRoutes";
+import { Sidebar } from "@components/Sidebar/Sidebar";
+import { Navbar } from "@components/Navigation/Navbar";
+import { Redirect, Route, Switch } from "react-router-dom";
+import { homeRoutes } from "@pages/Home/homeRoutes";
 
 const useStyles = makeStyles(styles as any);
 
@@ -39,6 +39,7 @@ export const HomePage = () => {
                             {homeRoutes.map(({path, component, name}, key) => (
                                 <Route
                                     path={path}
+                                    exact
                                     component={component}
                                     key={name}
                                 />

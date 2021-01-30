@@ -7,7 +7,9 @@ import DateFnsUtils from "@date-io/date-fns";
 import { RestfulProvider } from "restful-react";
 
 import { StyledAppRoot } from '@components/Layoat';
+import { NavigationListener } from "@components/Navigation/NavigationListener";
 import { appRoutes } from "./appRoutes";
+
 import './App.css';
 
 
@@ -20,6 +22,7 @@ export function App() {
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
                     <RestfulProvider base="http://localhost:59678/api/">
                         <StyledAppRoot>
+                            <NavigationListener />
                             <Switch>
                                 {appRoutes.map(({ path, component, name }, key) => (
                                     <Route

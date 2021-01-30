@@ -5,13 +5,13 @@ import { useHistory } from "react-router";
 import { StyledRoot } from "@pages/Home/components/styled";
 import { ProjectForm, ProjectValues } from "./components/ProjectForm";
 
-export const AddProjectPage = () => {
+export const ProjectAddPage = () => {
 
     const history = useHistory();
 
     const { mutate: saveProject, loading } = useMutate({
         verb: "POST",
-        path: `/project`
+        path: `/projects`
     });
 
 

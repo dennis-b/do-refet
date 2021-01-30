@@ -1,12 +1,12 @@
 import React from 'react';
 import { Box, Grid, Typography } from '@material-ui/core';
 import { StyledRoot } from "@pages/Home/components/styled";
-import { DashboardIrrGraph } from "@pages/Home/pages/Dashboard/component/DashboardIrrGraph";
 import { useGet } from "restful-react";
 import { normalizeGraphData, numberFormat } from "@utils/appUtils";
 import { useRecoilState } from "recoil";
 import { dashboardState, Stats } from "@pages/Home/pages/Dashboard/state";
 import { CardWithHeader } from "@components/Card/CardWithHeader";
+import { ValueTimeLineGraph } from "@components/Graph/ValueTimeLineGraph";
 
 export const DashboardPage = () => {
 
@@ -22,7 +22,7 @@ export const DashboardPage = () => {
         resolve: (data) => setStats(data)
     })
 
-    const { currentValue, valueGraph } = stats;
+    const { currentValue, valueGraph, investedValueGraph } = stats;
 
     return (
         <StyledRoot>
@@ -44,7 +44,11 @@ export const DashboardPage = () => {
             </Grid>
 
             <Box mt={3} display='flex' justifyContent='center'>
-                <DashboardIrrGraph data={normalizeGraphData(valueGraph)} />
+                <ValueTimeLineGraph
+                    data={normalizeGraphData(valueGraph)}
+                    investedData={investedValueGraph}
+                    legend="Refet Value Over Time"
+                />
             </Box>
         </StyledRoot>
     );

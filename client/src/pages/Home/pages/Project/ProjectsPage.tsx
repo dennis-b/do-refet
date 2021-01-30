@@ -17,13 +17,11 @@ export const ProjectsPage = () => {
 
     const [projects, setProjects] = useRecoilState(projectsState)
     useGet({
-        path: 'project',
+        path: 'projects',
         resolve: (data) => setProjects(responseResolver(data))
     })
 
-    const onAddProject = () => history.push('/home/project/add');
-
-    console.log(projects)
+    const onAddProject = () => history.push('/home/projects/add');
 
     return (
         <StyledRoot>
@@ -44,7 +42,9 @@ export const ProjectsPage = () => {
                     </Fab>
                 </Box>
             </Box>
-            {projects && <Projects projects={projects} />}
+            <Box>
+                {projects && <Projects projects={projects} />}
+            </Box>
         </StyledRoot>
     );
 };

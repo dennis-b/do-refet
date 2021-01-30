@@ -7,3 +7,8 @@ export enum ProjectType {
     ValueAdd = "ValueAdd",
     ConstructionFund = "ConstructionFund"
 }
+
+export interface GraphTimeLineDataIfc {
+    date: string
+    value: number
+}

@@ -5,15 +5,16 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Hidden from "@material-ui/core/Hidden";
 import styles from "@assets/jss/material-dashboard-react/components/headerStyle.js";
+import { useRecoilValue } from "recoil";
+import { navigationState } from "@shared/state";
 
 const useStyles = makeStyles(styles as any);
 
-export function Navbar({handleDrawerToggle}: any) {
+
+export function Navbar({ handleDrawerToggle }: any) {
     const classes = useStyles();
 
-    function makeBrand() {
-        return 'make brand'
-    }
+    const { name } = useRecoilValue(navigationState)
 
     return (
         <AppBar className={classes.appBar + ' primary'}>
@@ -24,7 +25,7 @@ export function Navbar({handleDrawerToggle}: any) {
                         href="#"
                         className={classes.title}
                     >
-                        {makeBrand()}
+                        {name}
                     </Button>
                 </div>
                 <Hidden

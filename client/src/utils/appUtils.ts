@@ -34,6 +34,20 @@ export function datePickerLabel(date: MaterialUiPickersDate) {
     return moment(date).format('DD/MM/YYYY')
 }
 
-export const numberFormat = new Intl.NumberFormat('en', {
-    maximumFractionDigits: 0
+export const numberFormat = new Intl.NumberFormat('he-IL', {
+    style: 'currency',
+    currency: 'ILS',
+    maximumFractionDigits: 0,
+    minimumFractionDigits: 0
 });
+
+export function containsNumber(str: string) {
+
+    for (let i = 0; i < str.length; i++) {
+        const item = str[i];
+        if (Number.isInteger(Number(item))) {
+            return true
+        }
+    }
+    return false;
+}

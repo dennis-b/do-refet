@@ -1,10 +1,18 @@
-import { projectsState } from "@pages/Home/pages/Project/state/atoms";
+import { ProjectModel, projectSelectedState, projectSelectedStatsState } from "@pages/Home/pages/Project/state/atoms";
 import { selector } from "recoil";
+import { GraphTimeLineDataIfc } from "@shared/models";
 
-const filteredProjectsState = selector({
-    key: 'filteredProjectsState',
+
+export interface ProjectWithStatsModel extends ProjectModel {
+    valueGraph: GraphTimeLineDataIfc[]
+    currentValue: number
+}
+
+export const projectSelectedWithStatsState = selector({
+    key: 'projectSelectedWithStatsState',
     get: ({ get }) => {
-        const list = get(projectsState);
-        return list
+        const stats = get(projectSelectedStatsState);
+        const selected = get(projectSelectedState);
+        return { ...stats, ...selected }
     },
 });
