@@ -12,7 +12,6 @@ def main():
   CORS(app)
   db = Database()
   refet = Refet(db, app)
-  #j = refet.getProjectsJson()
 
   app.add_url_rule(
              "/api/projects",  "project", refet.project,  methods=[ 'GET', 'POST', 'PUT']
@@ -20,10 +19,7 @@ def main():
   app.add_url_rule(
     "/api/stats", "stats", refet.stats, methods=['GET']
   )
-
-
-  #app.add_url_rule( "/api/refetValue", 'refetvalue', refet.valueGraph, methods = [ 'GET' ])
-  app.run(port=59800)
+  app.run(port=59678)
 
 if __name__ == "__main__":
   main()

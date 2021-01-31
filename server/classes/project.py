@@ -3,27 +3,24 @@ from datetime import datetime, date
 import json
 from dateutil.relativedelta import *
 
+from classes.currency import CurrencyConverter
 class Project:
 
-    def __init__(self, name="", equity = 0, currency='ILS', irr = 0, description = "",operator="", type="", start_date = datetime.now(), end_date = None):
+    def __init__(self, converter, name="", equity = 0, currency='ILS', irr = 0, description = "",operator="", type="", start_date = datetime.now(), end_date = None):
         self._name = name
         self._irr = float(irr)
         self._start_date = start_date
         self._end_date = end_date
         self._equity = float(equity)
-
         self._currency = currency
         self._operator = operator
         self._type = type
         self._description = description
         self._id = ""
         self._equities_per_date = []
+        self._converter = converter
 
-
-
-
-
-    def value(self, date):
+    def value(self, date, currency ='ILS'):
         if date < self._start_date:
             return 0
         if date> self._end_date:
@@ -31,28 +28,20 @@ class Project:
 
         durration = ((date-self._start_date).days)/364
         if durration ==0:
-            return self._equity
-        valueIrr = durration *self._irr
-        increase = self._equity*(valueIrr/100)
-        value = self._equity+increase
+            value =  self._equity
+        else:
+            valueIrr = durration *self._irr
+            increase = self._equity*(valueIrr/100)
+            value = self._equity+increase
+        value = self._converter.convert(value, date, self._currency, currency)
         return value
 
 
-    def invested_value(self):
-        return self._equity
+    def invested_value(self, date, currency = 'ILS'):
+        invested_value =  self._equity if date >= self._start_date and date <= self._end_date else 0
+        invested_value = self._converter.convert(invested_value, date, self._currency, currency)
+        return invested_value
 
-    def investedValueGraph(self):
-        ret = []
-        interval = 1
-        startDate = self._start_date  # smallest start date
-        endDate = datetime.now()
-        endDate = date(endDate.year, endDate.month, endDate.day)
-        dt = startDate
-        while dt <= endDate:
-            ret.append({'date': dt.isoformat() + ".000Z", 'value': self.invested_value()})
-            dt += relativedelta(months=+int(interval))
-        ret.append({'date': endDate.isoformat() + ".000Z", 'value': self.invested_value(endDate)})
-        return ret
 
 
     def _valueGraph(self):
@@ -66,7 +55,10 @@ class Project:
         if self._equities_per_date:
             vals =  [ {self._start_date:self._equity} ]+self._equities_per_date
             for v in vals:
-                ret.append( { 'date' :list(v.keys())[0].isoformat() +".000Z", 'value' : list(v.values())[0]} )
+                dt = list(v.keys())[0]
+                ret.append( { 'date' :dt.isoformat() +".000Z",
+                              'value' : list(v.values())[0],
+                              'invested_value': self.invested_value(dt)} )
             return ret
 
         interval = 1
@@ -75,12 +67,16 @@ class Project:
 
         dt = startDate
         while dt <= endDate:
-            ret.append( { 'date' :dt.isoformat() +".000Z", 'value' : self.value(dt)})
+            ret.append( { 'date' :dt.isoformat() +".000Z",
+                          'value' : self.value(dt),
+                          'invested_value': self.invested_value(dt)})
             dt += relativedelta(months=+int(interval))
-        ret.append({'date': date(endDate.year, endDate.month, endDate.day).isoformat() + ".000Z", 'value': self.value(endDate)})
+        ret.append({'date': endDate.isoformat() + "Z",
+                    'value': self.value(endDate),
+                    'invested_value' : self.invested_value(endDate)})
         return ret
 
-    def statsDict(self):
+    def statsDict(self, _converter):
         '''
         get project statistics
         :return: dict of project statistics
@@ -109,7 +105,15 @@ class Project:
 
 
     def toJSON(self):
-        return json.dumps(self, default=lambda o: o.__dict__ if not  isinstance(o, datetime) else o.isoformat() ,
+
+        def defaultFunc(o):
+            if isinstance(o, datetime):
+                return o.isoformat() + ".000Z"
+            elif isinstance(o, CurrencyConverter):
+                return ''
+            else:
+                return o.__dict__
+        return json.dumps(self, default=defaultFunc ,
                           sort_keys=True, indent=4)
 
 
