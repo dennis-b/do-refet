@@ -1,4 +1,5 @@
-import {HomePage} from "@pages/Home";
+import { HomePage } from "@pages/Home";
+import { LoginPage } from "@pages/Auth/LoginPage";
 
 export const appRoutes = [
     {
@@ -6,10 +7,10 @@ export const appRoutes = [
         name: "Home",
         component: HomePage,
     },
-    // {
-    //     path: "/login",
-    //     name: "Login",
-    //     component: LoginPage,
-    // },
+    {
+        path: "/login",
+        name: "Login",
+        component: LoginPage,
+    },
 
 ];

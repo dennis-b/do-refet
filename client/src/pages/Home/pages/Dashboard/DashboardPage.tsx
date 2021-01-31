@@ -48,6 +48,7 @@ export const DashboardPage = () => {
                     data={normalizeGraphData(valueGraph)}
                     investedData={investedValueGraph}
                     legend="Refet Value Over Time"
+                    max={5000000}
                 />
             </Box>
         </StyledRoot>

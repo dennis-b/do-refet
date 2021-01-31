@@ -11,6 +11,7 @@ import { NavigationListener } from "@components/Navigation/NavigationListener";
 import { appRoutes } from "./appRoutes";
 
 import './App.css';
+import { Theme } from "@assets/style";
 
 
 const hist = createBrowserHistory();
@@ -21,19 +22,21 @@ export function App() {
             <RecoilRoot>
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
                     <RestfulProvider base="http://localhost:59678/api/">
-                        <StyledAppRoot>
-                            <NavigationListener />
-                            <Switch>
-                                {appRoutes.map(({ path, component, name }, key) => (
-                                    <Route
-                                        path={path}
-                                        component={component}
-                                        key={name}
-                                    />
-                                ))}
-                                <Redirect from="/" to="/home" />
-                            </Switch>
-                        </StyledAppRoot>
+                        <Theme>
+                            <StyledAppRoot>
+                                <NavigationListener />
+                                <Switch>
+                                    {appRoutes.map(({ path, component, name }, key) => (
+                                        <Route
+                                            path={path}
+                                            component={component}
+                                            key={name}
+                                        />
+                                    ))}
+                                    <Redirect from="/" to="/home" />
+                                </Switch>
+                            </StyledAppRoot>
+                        </Theme>
                     </RestfulProvider>
                 </MuiPickersUtilsProvider>
             </RecoilRoot>
