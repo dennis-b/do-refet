@@ -86,6 +86,7 @@ class Refet:
         response =  makeResponse(jsonStr, self._app)
         return response
 
+
     def isValidUser(self, username):
         username in self._users
 
