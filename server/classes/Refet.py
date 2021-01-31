@@ -24,6 +24,7 @@ class Refet:
         self._projects = {}
         self._read_projects_from_db()
         self._app = app
+        self._users = { 'sirkinolya@gmail.com': "olya1234", 'dennisborsh@gmail.com':'dennis'}
 
 
     def _read_projects_from_db(self):
@@ -85,6 +86,15 @@ class Refet:
         response =  makeResponse(jsonStr, self._app)
         return response
 
+    def isValidUser(self, username):
+        username in self._users
+
+    def verify_user(self, username, password):
+        if username is not is self._users :
+            return False
+        if self._users[username] != password:
+            return False
+        return True
 
     def _getProjecStats(self):
         id = request.args['id']
