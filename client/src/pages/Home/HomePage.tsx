@@ -22,7 +22,7 @@ export const HomePage = () => {
         <div
             className={classes.wrapper}>
             <Sidebar
-                logoText={"Creative Tim"}
+                logoText="DO REFET"
                 logo={'logo'}
                 handleDrawerToggle={handleDrawerToggle}
                 open={mobileOpen}

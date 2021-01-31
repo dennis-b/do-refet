@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { CartesianGrid, Legend, Line, LineChart, Tooltip, XAxis, YAxis } from 'recharts';
+import { CartesianGrid, Legend, Line, LineChart, ReferenceLine, Tooltip, XAxis, YAxis } from 'recharts';
 import { numberFormat } from "@utils/appUtils";
 import { GraphTimeLineDataIfc } from "@shared/models";
 
@@ -9,6 +9,7 @@ interface Props {
     legend?: string
     width?: number
     height?: number
+    max?: number
 }
 
 export const ValueTimeLineGraph = (
@@ -17,7 +18,8 @@ export const ValueTimeLineGraph = (
         investedData = [],
         legend,
         height = 300,
-        width = 800
+        width = 800,
+        max
     }: Props) => {
 
 
@@ -58,6 +60,7 @@ export const ValueTimeLineGraph = (
                 verticalAlign="top"
                 height={36}
             />
+            {max && <ReferenceLine y={max} stroke="red" />}
             <Line
                 type="monotone"
                 dataKey="value"
