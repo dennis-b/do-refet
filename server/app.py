@@ -2,6 +2,7 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 from database import Database
 from classes.Refet import Refet
+from server.classes.authentication import verifyUser
 from flask_jwt_extended import (
     JWTManager, jwt_required, create_access_token,
     get_jwt_identity
@@ -23,18 +24,16 @@ db = Database()
 
 refet = Refet(db, app)
 
-# @app.route('/protected', methods=['GET'])
-# @jwt_required
-# def protected():
-#     # Access the identity of the current user with get_jwt_identity
-#     current_user = get_jwt_identity()
-#     return jsonify(logged_in_as=current_user), 200
 
+debug = True
+if debug:
+    valid, refet_id = verifyUser('sirkinolya@gmail.com', 'olya')
+    refet.initFromDb(refet_id)
 
 
 @app.route('/login', methods=['POST'])
 def login():
-    from server.classes.authentication import verifyUser
+
     if not request.is_json:
         return jsonify({"msg": "Missing JSON in request"}), 400
 

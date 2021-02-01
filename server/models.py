@@ -51,7 +51,7 @@ class Project(Document):
 
 class Refet(Document):
     meta = {"collection": "Refet"}
-    users = ListField(ListField())
+    users = ListField()
     goal = IntField()
     goal_currency = StringField()
     project_ids = ListField(StringField())

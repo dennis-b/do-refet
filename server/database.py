@@ -12,8 +12,8 @@ class Database:
 
     def save_refet(self, refet):
         project_ids = list(refet._projects.keys())
-        users = [ (u, p) for u, p in refet._users.items()]
-        refet = Refet( goal = refet._goal, users = users,  goal_currency = refet._goal_currency,
+
+        refet = Refet( goal = refet._goal, users = refet._users,  goal_currency = refet._goal_currency,
                        project_ids = project_ids )
         refet.save()
 

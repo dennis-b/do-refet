@@ -26,8 +26,7 @@ class Refet:
            if str(refet.id) ==refet_id:
             self._goal = refet.goal
             self._goal_currency = refet.goal_currency
-            users = refet.users
-            self._users = {username:password for username, password in users}
+            self._users = refet.users
             projectsIds = refet.project_ids
             return projectsIds
         logging.error("could not find refet with id {}".format(refet_id))
@@ -39,13 +38,13 @@ class Refet:
         self._converter = CurrencyConverter()
         self._projects = {}
         self._app = app
-        self._users = {}
+        self._users = []
         self._goal = 0
         self._goal_currency = 'ILS'
 
 
     def initFromDb(self, refet_id):
-        project_ids  = self._read_refet_from_db()
+        project_ids  = self._read_refet_from_db(refet_id)
         self._read_projects_from_db(project_ids)
 
 
