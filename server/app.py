@@ -14,6 +14,13 @@ jwt = JWTManager(app)
 app.debug = True
 CORS(app)
 db = Database()
+
+# from models import User
+# u = User(username = 'sirkinolya@gmail.com', password = 'olya', name = 'olya', refet_id = "60179ba57269d409ab73c9a1")
+# u.save()
+# u = User(username = 'dennisborsh@gmail.com', password = 'dennis', name = 'dennis', refet_id = "60179ba57269d409ab73c9a1")
+# u.save()
+
 refet = Refet(db, app)
 
 # @app.route('/protected', methods=['GET'])
@@ -23,8 +30,11 @@ refet = Refet(db, app)
 #     current_user = get_jwt_identity()
 #     return jsonify(logged_in_as=current_user), 200
 
+
+
 @app.route('/login', methods=['POST'])
 def login():
+    from server.classes.authentication import verifyUser
     if not request.is_json:
         return jsonify({"msg": "Missing JSON in request"}), 400
 
@@ -35,10 +45,10 @@ def login():
     if not password:
         return jsonify({"msg": "Missing password parameter"}), 400
 
-    valid = refet.verify_user(username, password)
+    valid, refet_id = verifyUser(username, password)
     if not valid:
         return jsonify({"msg": "Bad username or password"}), 401
-
+    refet.initFromDb(refet_id)
     # Identity can be any data that is json serializable
     access_token = create_access_token(identity=username)
     return jsonify(access_token=access_token), 200

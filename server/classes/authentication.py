@@ -1,20 +1,7 @@
-from datetime import datetime
+def verifyUser(username, password):
+    from models import User
 
-def encode_auth_token(self, user_id):
-    """
-    Generates the Auth Token
-    :return: string
-    """
-    try:
-        payload = {
-            'exp': datetime.datetime.utcnow() + datetime.timedelta(days=0, seconds=5),
-            'iat': datetime.datetime.utcnow(),
-            'sub': user_id
-        }
-        return jwt.encode(
-            payload,
-            app.config.get('SECRET_KEY'),
-            algorithm='HS256'
-        )
-    except Exception as e:
-        return e
+    for user in User.objects:
+        if user == user.username and password == user.password:
+            return True, user.refet_id
+    return False, None

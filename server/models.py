@@ -56,6 +56,14 @@ class Refet(Document):
     goal_currency = StringField()
     project_ids = ListField(StringField())
 
+class User(Document):
+    meta = {"collection": "User"}
+    username = StringField()
+    password = StringField()
+    name = StringField()
+    refet_id = StringField()
+
+
 class Rates(Document):
     meta = {"collection": "Rates"}
     date = DateTimeField(default=datetime.now())

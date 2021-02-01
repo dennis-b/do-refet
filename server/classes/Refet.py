@@ -5,6 +5,7 @@ from flask import request
 from dateutil.relativedelta import *
 from flask import json as flaskJson
 from classes.currency import CurrencyConverter
+import logging
 
 def parseDate(dateStr):
     return datetime.strptime(dateStr, "%Y-%m-%dT%H:%M:%S.%fZ")
@@ -19,18 +20,18 @@ def makeResponse(jsonStr, app):
 
 class Refet:
 
-    def _read_refet_from_db(self):
+    def _read_refet_from_db(self, refet_id):
         from models import Refet as aRefet
-
-        refet =list(aRefet.objects)[0]
-        self._goal = refet.goal
-        self._goal_currency = refet.goal_currency
-        users = refet.users
-        self._users = {username:password for username, password in users}
-        projectsIds = refet.project_ids
-        return projectsIds
-
-
+        for refet in aRefet.objects:
+           if str(refet.id) ==refet_id:
+            self._goal = refet.goal
+            self._goal_currency = refet.goal_currency
+            users = refet.users
+            self._users = {username:password for username, password in users}
+            projectsIds = refet.project_ids
+            return projectsIds
+        logging.error("could not find refet with id {}".format(refet_id))
+        return []
 
 
     def __init__(self, db, app):
@@ -38,12 +39,12 @@ class Refet:
         self._converter = CurrencyConverter()
         self._projects = {}
         self._app = app
-        self._users = { 'sirkinolya@gmail.com': "olya1234", 'dennisborsh@gmail.com':'dennis'}
+        self._users = {}
         self._goal = 0
         self._goal_currency = 'ILS'
-        self.initFromDb()
 
-    def initFromDb(self):
+
+    def initFromDb(self, refet_id):
         project_ids  = self._read_refet_from_db()
         self._read_projects_from_db(project_ids)
 
@@ -113,12 +114,6 @@ class Refet:
     def isValidUser(self, username):
         username in self._users
 
-    def verify_user(self, username, password):
-        if username  not in self._users :
-            return False
-        if self._users[username] != password:
-            return False
-        return True
 
     def _getProjecStats(self):
         id = request.args['id']
