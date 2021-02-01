@@ -1,5 +1,5 @@
 from mongoengine import connect
-from models import Project
+from models import Project, Refet
 from datetime import datetime
 
 
@@ -9,6 +9,13 @@ class Database:
 
     def __init__(self):
         connect("do-refet", host="mongodb://localhost:27017", alias="default")
+
+    def save_refet(self, refet):
+        project_ids = list(refet._projects.keys())
+        users = [ (u, p) for u, p in refet._users.items()]
+        refet = Refet( goal = refet._goal, users = users,  goal_currency = refet._goal_currency,
+                       project_ids = project_ids )
+        refet.save()
 
     def save_project(self, project):
         '''

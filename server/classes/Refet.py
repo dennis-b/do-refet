@@ -18,21 +18,44 @@ def makeResponse(jsonStr, app):
     return response
 
 class Refet:
+
+    def _read_refet_from_db(self):
+        from models import Refet as aRefet
+
+        refet =list(aRefet.objects)[0]
+        self._goal = refet.goal
+        self._goal_currency = refet.goal_currency
+        users = refet.users
+        self._users = {username:password for username, password in users}
+        projectsIds = refet.project_ids
+        return projectsIds
+
+
+
+
     def __init__(self, db, app):
         self._db  = db
         self._converter = CurrencyConverter()
         self._projects = {}
-        self._read_projects_from_db()
         self._app = app
         self._users = { 'sirkinolya@gmail.com': "olya1234", 'dennisborsh@gmail.com':'dennis'}
+        self._goal = 0
+        self._goal_currency = 'ILS'
+        self.initFromDb()
+
+    def initFromDb(self):
+        project_ids  = self._read_refet_from_db()
+        self._read_projects_from_db(project_ids)
 
 
-    def _read_projects_from_db(self):
+    def _read_projects_from_db(self, project_ids):
         from models import Project as aProject
 
-        for post in aProject.objects:
+        for project in aProject.objects:
+            if str(project.id) not in project_ids:
+               continue
             pr = Project(self._converter)
-            pr.load_from_db(post)
+            pr.load_from_db(project)
             self._projects[pr._id] = pr
 
 
@@ -91,7 +114,7 @@ class Refet:
         username in self._users
 
     def verify_user(self, username, password):
-        if username is not is self._users :
+        if username  not in self._users :
             return False
         if self._users[username] != password:
             return False
