@@ -2,7 +2,7 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 from database import Database
 from classes.Refet import Refet
-from server.classes.authentication import verifyUser,refetByUser
+from server.classes.authentication import verifyUser
 from flask_jwt_extended import (
     JWTManager, jwt_required, create_access_token,
     get_jwt_identity
@@ -58,8 +58,6 @@ def login():
 @jwt_required
 def projects():
     current_user = get_jwt_identity()
-    refet_id = refetByUser(current_user)
-    refet.initFromDb(refet_id)
     if not refet.isValidUser(current_user):
         return jsonify({"msg": "Bad username or password"}), 401
     else:
@@ -69,8 +67,6 @@ def projects():
 @jwt_required
 def stats():
     current_user = get_jwt_identity()
-    refet_id= refetByUser(current_user)
-    refet.initFromDb(refet_id)
     if not refet.isValidUser(current_user):
         return jsonify({"msg": "Bad username or password"}), 401
     else:
