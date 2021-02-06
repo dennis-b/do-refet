@@ -41,9 +41,13 @@ class Refet:
         self._users = []
         self._goal = 0
         self._goal_currency = 'ILS'
+        self._id = ""
 
 
     def initFromDb(self, refet_id):
+        if self._id == refet_id:
+            return
+        self._id = refet_id
         project_ids  = self._read_refet_from_db(refet_id)
         self._read_projects_from_db(project_ids)
 
