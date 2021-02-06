@@ -12,6 +12,8 @@ import { appRoutes } from "./appRoutes";
 
 import './App.css';
 import { Theme } from "@assets/style";
+import { AppNotify, setNotify } from "@components/Notify";
+import { getRequestOptions } from "@utils/authUtils";
 
 
 const hist = createBrowserHistory();
@@ -21,7 +23,10 @@ export function App() {
         <Router history={hist}>
             <RecoilRoot>
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                    <RestfulProvider base="http://localhost:59678/api/">
+                    <RestfulProvider
+                        base="http://localhost:59678/api/"
+                        requestOptions={getRequestOptions}
+                    >
                         <Theme>
                             <StyledAppRoot>
                                 <NavigationListener />
@@ -36,6 +41,7 @@ export function App() {
                                     <Redirect from="/" to="/home" />
                                 </Switch>
                             </StyledAppRoot>
+                            <AppNotify ref={setNotify} />
                         </Theme>
                     </RestfulProvider>
                 </MuiPickersUtilsProvider>

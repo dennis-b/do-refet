@@ -36,7 +36,7 @@ export function LoginForm({ onLogin }: { onLogin: (values: any) => Promise<any> 
                                     </FormControl>
 
 
-                                    <Button type="submit">
+                                    <Button type="submit" color={"primary"}>
                                         LOG IN
                                     </Button>
 

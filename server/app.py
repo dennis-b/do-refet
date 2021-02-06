@@ -1,13 +1,13 @@
+from classes.Refet import Refet
+from database import Database
 from flask import Flask, jsonify, request
 from flask_cors import CORS
-from database import Database
-from classes.Refet import Refet
-from server.classes.authentication import verifyUser
 from flask_jwt_extended import (
     JWTManager, jwt_required, create_access_token,
     get_jwt_identity
 )
 
+from server.classes.authentication import verifyUser
 
 app = Flask(__name__)
 app.config['JWT_SECRET_KEY'] = 'super-secret'
@@ -31,13 +31,13 @@ if debug:
     refet.initFromDb(refet_id)
 
 
-@app.route('/login', methods=['POST'])
+@app.route('/api/login', methods=['POST'])
 def login():
 
     if not request.is_json:
         return jsonify({"msg": "Missing JSON in request"}), 400
 
-    username = request.json.get('username', None)
+    username = request.json.get('email', None)
     password = request.json.get('password', None)
     if not username:
         return jsonify({"msg": "Missing username parameter"}), 400

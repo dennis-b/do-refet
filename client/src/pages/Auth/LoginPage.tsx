@@ -4,39 +4,47 @@ import { useHistory } from "react-router";
 
 import { LoginForm } from "./components/Login/LoginForm";
 import { Root, StFullLogoContainer, StFullLogoIcon } from "./components/styled";
+import { useMutate } from "restful-react";
+import { notifyError } from "@components/Notify";
+import { responseResolver } from "@utils/appUtils";
+import { getUserToken } from "@utils/authUtils";
 
 
 export function LoginPage() {
 
     const location = useLocation();
     const history = useHistory();
+    const { mutate: login, loading } = useMutate({
+        verb: "POST",
+        path: `/login`,
+        resolve: (data) => {
+            const { accessToken } = responseResolver(data);
+            localStorage.setItem('token', accessToken)
+        }
+    });
 
     useEffect(() => {
-        // const token = getUserToken();
-        // if (token) {
-        //     history.push('/')
-        // }
-        //
-        // const query = new URLSearchParams(location.search);
-        // const forbidden = query.get('forbidden');
-        // if (forbidden) {
-        //     notifyError({ message: "Opps you are cannot access this resource!" })
-        // }
+        const token = getUserToken();
+        if (token) {
+            history.push('/')
+        }
+
+        const query = new URLSearchParams(location.search);
+        const forbidden = query.get('forbidden');
+        if (forbidden) {
+            notifyError({ message: "Opps you are cannot access this resource!" })
+        }
 
     }, [])
 
 
     const onLogin = async ({ email, password }: { email: string, password: string }) => {
         try {
-            // const { data: { login: { uid, token, account } } } = await doLogin({ variables: { email, password } });
-            // setUserData({ uid, info: email, account })
-            // setUserToken(token)
-            // client.writeData({ data: { isLoggedIn: true } });
+            await login({ email, password });
             history.push('/')
-
-        } catch (e) {
-            // notifyError({ message: error.message })
-
+        } catch (error) {
+            console.log(error)
+            notifyError({ message: error.data.msg })
         }
     };
 
