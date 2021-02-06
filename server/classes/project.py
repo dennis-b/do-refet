@@ -19,6 +19,13 @@ class Project:
         self._id = ""
         self._equities_per_date = []
         self._converter = converter
+        self._tazrim = 0
+
+
+    def tazrim(self, date):
+        if date < self._end_date and date > self._start_date:
+            return  self._tazrim
+        return 0
 
     def value(self, date, currency ='ILS'):
         if date < self._start_date:
@@ -85,6 +92,7 @@ class Project:
         stats['currentValue'] = self.value(datetime.now())
         stats['valueGraph'] = self._valueGraph()
         stats['id'] = self._id
+        stats['tazrim'] = self._tazrim(datetime.now())
         return stats
 
 

@@ -25,7 +25,7 @@ db = Database()
 refet = Refet(db, app)
 
 
-debug = True
+debug = False
 if debug:
     valid, refet_id = verifyUser('sirkinolya@gmail.com', 'olya')
     refet.initFromDb(refet_id)
@@ -82,6 +82,19 @@ def stats():
 # )
 
 if __name__ == '__main__':
+    # from server.models import Project
+    import pymongo
+
+    from datetime import datetime as d
+
+    # client = pymongo.MongoClient(
+    #     "mongodb+srv://dorefetuser:dorefetpass@clusterdev.ypvoi.mongodb.net/dorefet?retryWrites=true&w=majority")
+    # db = client.test
+    # p = Project(name = 'Ceva stocks', start_date = d(2021,2,4), end_date = d.max,
+    #             start_equity = 1400*60, currency = 'USD', type='stocks', description = 'Single ceva stocks. Note increased tax on base equity. Puchase price is around 25 per share. Implement differently',
+    #             operator="", irr = 0)
+    # p.save()
+    v = refet.get_value(d.now())
     app.run(port=59678)
 
 

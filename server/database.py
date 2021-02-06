@@ -8,7 +8,8 @@ from datetime import datetime
 class Database:
 
     def __init__(self):
-        connect("do-refet", host="mongodb://localhost:27017", alias="default")
+        host = "mongodb+srv://dorefetuser:dorefetpass@clusterdev.ypvoi.mongodb.net/dorefet?retryWrites=true&w=majority"
+        connect("dorefet", host=host, alias="default")
 
     def save_refet(self, refet):
         project_ids = list(refet._projects.keys())
