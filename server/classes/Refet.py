@@ -54,9 +54,9 @@ class Refet:
 
     def tazrim(self, date, currency = 'ILS'):
         v = 0
-        for p in self._projects:
+        for p in self._projects.values():
             pVal = p.tazrim(date)
-            v += self._converter.convert(pVal, p.currency, currency)
+            v += self._converter.convert(pVal, p._currency, currency)
         return v
 
     def _read_projects_from_db(self, project_ids):
@@ -122,7 +122,7 @@ class Refet:
 
 
     def isValidUser(self, username):
-        username in self._users
+        return username in self._users
 
 
     def _getProjecStats(self):
@@ -173,7 +173,7 @@ class Refet:
         stats = {}
         stats['currentValue'] = self.get_value(datetime.now())
         stats['valueGraph'] = self._valueGraph()
-        stats['tazrim'] = self.tazrim(datetime.now())
+        # stats['tazrim'] = self.tazrim(datetime.now())
         return stats
 
     def stats(self):

@@ -2,6 +2,7 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 from database import Database
 from classes.Refet import Refet
+from datetime import timedelta
 from server.classes.authentication import verifyUser, refetByUser
 from flask_jwt_extended import (
     JWTManager, jwt_required, create_access_token,
@@ -31,13 +32,13 @@ if debug:
     refet.initFromDb(refet_id)
 
 
-@app.route('/login', methods=['POST'])
+@app.route('/api/login', methods=['POST'])
 def login():
 
     if not request.is_json:
         return jsonify({"msg": "Missing JSON in request"}), 400
 
-    username = request.json.get('username', None)
+    username = request.json.get('email', None)
     password = request.json.get('password', None)
     if not username:
         return jsonify({"msg": "Missing username parameter"}), 400
@@ -49,7 +50,7 @@ def login():
         return jsonify({"msg": "Bad username or password"}), 401
     refet.initFromDb(refet_id)
     # Identity can be any data that is json serializable
-    access_token = create_access_token(identity=username)
+    access_token = create_access_token(identity=username, expires_delta=timedelta(0))
     return jsonify(access_token=access_token), 200
 
 
@@ -74,7 +75,7 @@ def stats():
     if not refet.isValidUser(current_user):
         return jsonify({"msg": "Bad username or password"}), 401
     else:
-        refet.stats()
+        return refet.stats()
 
 
 

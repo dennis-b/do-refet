@@ -92,7 +92,7 @@ class Project:
         stats['currentValue'] = self.value(datetime.now())
         stats['valueGraph'] = self._valueGraph()
         stats['id'] = self._id
-        stats['tazrim'] = self._tazrim(datetime.now())
+        # stats['tazrim'] = self._tazrim(datetime.now())
         return stats
 
 

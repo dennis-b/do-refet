@@ -9,7 +9,3 @@ export function getRequestOptions(url, method, requestBody) {
 export function getUserToken(): string | null {
     return localStorage.getItem("token")
 }
-
-
-// mongodb+srv://dorefetuser:<password>@clusterdev.ypvoi.mongodb.net/<dbname>?retryWrites=true&w=majority
-// mongodb+srv://dorefetuser:dorefetpass@clusterdev.ypvoi.mongodb.net/dorefet?retryWrites=true&w=majority
