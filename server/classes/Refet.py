@@ -47,6 +47,12 @@ class Refet:
         project_ids  = self._read_refet_from_db(refet_id)
         self._read_projects_from_db(project_ids)
 
+    def tazrim(self, date, currency = 'ILS'):
+        v = 0
+        for p in self._projects:
+            pVal = p.tazrim(date)
+            v += self._converter.convert(pVal, p.currency, currency)
+        return v
 
     def _read_projects_from_db(self, project_ids):
         from models import Project as aProject
@@ -162,6 +168,7 @@ class Refet:
         stats = {}
         stats['currentValue'] = self.get_value(datetime.now())
         stats['valueGraph'] = self._valueGraph()
+        stats['tazrim'] = self.tazrim(datetime.now())
         return stats
 
     def stats(self):
