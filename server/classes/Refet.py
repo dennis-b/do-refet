@@ -44,6 +44,7 @@ class Refet:
         self._id = ""
 
 
+
     def initFromDb(self, refet_id):
         if self._id == refet_id:
             return
