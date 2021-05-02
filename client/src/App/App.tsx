@@ -24,7 +24,7 @@ export function App() {
             <RecoilRoot>
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
                     <RestfulProvider
-                        base="http://localhost:59678/api/"
+                        base="https://mighty-inlet-63351.herokuapp.com/api/"
                         requestOptions={getRequestOptions}
                     >
                         <Theme>
