@@ -14,7 +14,7 @@ export const NavigationListener = () => {
       setNavState(getActiveRouteName())
     });
     return () => unlisten()
-  }, [history])
+  }, [history, setNavState])
 
   return null;
 };
