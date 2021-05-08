@@ -3,15 +3,15 @@ import { isEmpty } from "lodash";
 
 import { StOutlinedInput } from "./styled";
 
-interface BaseTextField {
-    value: string;
-    type?: string;
-    name: string;
-    label: string;
-    onChange: any;
-    autoFocus?: boolean;
-    hasError?: boolean;
-    InputProps?: any;
+interface BaseTextFieldProps {
+  value: string;
+  type?: string;
+  name: string;
+  label: string;
+  onChange: any;
+  autoFocus?: boolean;
+  hasError?: boolean;
+  InputProps?: any;
 }
 
 const getInputPadding = ({ startAdornment, endAdornment }: any) => {
@@ -27,26 +27,26 @@ const getInputPadding = ({ startAdornment, endAdornment }: any) => {
 }
 
 export function BaseTextField(
-    {
-        value,
-        type = 'string',
-        name,
-        label,
-        onChange,
-        autoFocus = false,
-        hasError = false,
-        InputProps = {},
-    }: BaseTextField) {
+  {
+    value,
+    type = 'string',
+    name,
+    label,
+    onChange,
+    autoFocus = false,
+    hasError = false,
+    InputProps = {},
+  }: BaseTextFieldProps) {
 
-    const [focused, setFocused] = useState<boolean>()
-    const toggleFocused = () => setFocused(!focused);
-    const padding = getInputPadding(InputProps)
+  const [focused, setFocused] = useState<boolean>()
+  const toggleFocused = () => setFocused(!focused);
+  const padding = getInputPadding(InputProps)
 
 
-    return (
-        <StOutlinedInput
-            padding={padding}
-            showlabel={focused || !isEmpty(value) ? 'hide' : 'show'}
+  return (
+    <StOutlinedInput
+      padding={padding}
+      showlabel={focused || !isEmpty(value) ? 'hide' : 'show'}
             type={type}
             name={name}
             haserror={hasError ? 'hasError' : undefined}

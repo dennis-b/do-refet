@@ -14,7 +14,7 @@ export function LoginPage() {
 
     const location = useLocation();
     const history = useHistory();
-    const { mutate: login, loading } = useMutate({
+    const { mutate: login } = useMutate({
         verb: "POST",
         path: `/login`,
         resolve: (data) => {
@@ -35,7 +35,7 @@ export function LoginPage() {
             notifyError({ message: "Opps you are cannot access this resource!" })
         }
 
-    }, [])
+    }, [history, location.search])
 
 
     const onLogin = async ({ email, password }: { email: string, password: string }) => {

@@ -9,7 +9,7 @@ export const ProjectAddPage = () => {
 
     const history = useHistory();
 
-    const { mutate: saveProject, loading } = useMutate({
+    const { mutate: saveProject } = useMutate({
         verb: "POST",
         path: `/projects`
     });
@@ -17,7 +17,7 @@ export const ProjectAddPage = () => {
 
     const onSubmit = async (values: ProjectValues) => {
         try {
-            const res = await saveProject(values)
+            await saveProject(values)
             history.push('/home/projects')
         } catch (e) {
             console.error(e)

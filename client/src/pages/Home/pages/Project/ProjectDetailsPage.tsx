@@ -1,5 +1,5 @@
 import React from 'react';
-import { useHistory, useParams } from "react-router";
+import { useParams } from "react-router";
 import { StyledRoot } from "@pages/Home/components/styled";
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { useGet } from "restful-react";
@@ -22,7 +22,6 @@ type Params = {
 }
 export const ProjectDetailsPage = () => {
 
-    const history = useHistory();
     const { id } = useParams<Params>();
 
     const setProjectSelected = useSetRecoilState(projectSelectedState)
