@@ -1,8 +1,5 @@
-from mongoengine import connect
 from models import Project, Refet
-from datetime import datetime
-
-
+from mongoengine import connect
 
 
 class Database:
@@ -14,8 +11,8 @@ class Database:
     def save_refet(self, refet):
         project_ids = list(refet._projects.keys())
 
-        refet = Refet( goal = refet._goal, users = refet._users,  goal_currency = refet._goal_currency,
-                       project_ids = project_ids )
+        refet = Refet(goal=refet._goal, users=refet._users, goal_currency=refet._goal_currency,
+                      project_ids=project_ids)
         refet.save()
 
     def save_project(self, project):
@@ -24,8 +21,10 @@ class Database:
         :param project:
         :return: project id in the database
         '''
-        project = Project(name=project._name, start_date=project._start_date, end_date=project._end_date, irr=project._irr,
-                          start_equity=project._equity, currency=project._currency, type = project._type, description = project._description )
+        project = Project(name=project._name, start_date=project._start_date, end_date=project._end_date,
+                          irr=project._irr,
+                          start_equity=project._equity, currency=project._currency, type=project._type,
+                          description=project._description)
 
         project.save()
         return project.id
@@ -47,9 +46,6 @@ class Database:
                 pr.save()
                 return True
         return False
-
-
-    
 
 #
 #

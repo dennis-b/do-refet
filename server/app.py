@@ -1,14 +1,20 @@
+import os
+import sys
+
+
+# test
+# test
+sys.path.append(os.getcwd())
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 from database import Database
 from classes.Refet import Refet
 from datetime import timedelta
-from server.classes.authentication import verifyUser, refetByUser
+from classes.authentication import verifyUser, refetByUser
 from flask_jwt_extended import (
     JWTManager, jwt_required, create_access_token,
     get_jwt_identity
 )
-
 
 app = Flask(__name__)
 app.config['JWT_SECRET_KEY'] = 'super-secret'
@@ -25,16 +31,18 @@ db = Database()
 
 refet = Refet(db, app)
 
-
 debug = False
 if debug:
     valid, refet_id = verifyUser('sirkinolya@gmail.com', 'olya')
     refet.initFromDb(refet_id)
 
 
+@app.route('/', methods=['GET'])
+def health():
+    return "ok", 200
+
 @app.route('/api/login', methods=['POST'])
 def login():
-
     if not request.is_json:
         return jsonify({"msg": "Missing JSON in request"}), 400
 
@@ -54,8 +62,7 @@ def login():
     return jsonify(access_token=access_token), 200
 
 
-
-@app.route("/api/projects", methods=[ 'GET', 'POST', 'PUT' ])
+@app.route("/api/projects", methods=['GET', 'POST', 'PUT'])
 @jwt_required
 def projects():
     current_user = get_jwt_identity()
@@ -66,18 +73,17 @@ def projects():
     else:
         return refet.project()
 
-@app.route("/api/stats", methods=[ 'GET' ])
+
+@app.route("/api/stats", methods=['GET'])
 @jwt_required
 def stats():
     current_user = get_jwt_identity()
-    id =refetByUser(current_user)
+    id = refetByUser(current_user)
     refet.initFromDb(id)
     if not refet.isValidUser(current_user):
         return jsonify({"msg": "Bad username or password"}), 401
     else:
         return refet.stats()
-
-
 
 
 # app.add_url_rule(
@@ -89,7 +95,6 @@ def stats():
 
 if __name__ == '__main__':
     # from server.models import Project
-    import pymongo
 
     from datetime import datetime as d
 
@@ -102,6 +107,3 @@ if __name__ == '__main__':
     # p.save()
     v = refet.get_value(d.now())
     app.run(port=59678)
-
-
-

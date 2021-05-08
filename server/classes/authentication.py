@@ -6,6 +6,7 @@ def verifyUser(username, password):
             return True, user.refet_id
     return False, None
 
+
 def refetByUser(username):
     from models import User
 

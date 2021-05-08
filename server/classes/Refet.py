@@ -1,14 +1,17 @@
+import logging
+from datetime import datetime
+
+from classes.currency import CurrencyConverter
 from classes.project import Project
-from datetime import datetime, date
-#import json
-from flask import request
 from dateutil.relativedelta import *
 from flask import json as flaskJson
-from classes.currency import CurrencyConverter
-import logging
+# import json
+from flask import request
+
 
 def parseDate(dateStr):
     return datetime.strptime(dateStr, "%Y-%m-%dT%H:%M:%S.%fZ")
+
 
 def makeResponse(jsonStr, app):
     response = app.response_class(
@@ -18,23 +21,23 @@ def makeResponse(jsonStr, app):
     )
     return response
 
+
 class Refet:
 
     def _read_refet_from_db(self, refet_id):
         from models import Refet as aRefet
         for refet in aRefet.objects:
-           if str(refet.id) ==refet_id:
-            self._goal = refet.goal
-            self._goal_currency = refet.goal_currency
-            self._users = refet.users
-            projectsIds = refet.project_ids
-            return projectsIds
+            if str(refet.id) == refet_id:
+                self._goal = refet.goal
+                self._goal_currency = refet.goal_currency
+                self._users = refet.users
+                projectsIds = refet.project_ids
+                return projectsIds
         logging.error("could not find refet with id {}".format(refet_id))
         return []
 
-
     def __init__(self, db, app):
-        self._db  = db
+        self._db = db
         self._converter = CurrencyConverter()
         self._projects = {}
         self._app = app
@@ -43,16 +46,14 @@ class Refet:
         self._goal_currency = 'ILS'
         self._id = ""
 
-
-
     def initFromDb(self, refet_id):
         if self._id == refet_id:
             return
         self._id = refet_id
-        project_ids  = self._read_refet_from_db(refet_id)
+        project_ids = self._read_refet_from_db(refet_id)
         self._read_projects_from_db(project_ids)
 
-    def tazrim(self, date, currency = 'ILS'):
+    def tazrim(self, date, currency='ILS'):
         v = 0
         for p in self._projects.values():
             pVal = p.tazrim(date)
@@ -64,30 +65,28 @@ class Refet:
 
         for project in aProject.objects:
             if str(project.id) not in project_ids:
-               continue
+                continue
             pr = Project(self._converter)
             pr.load_from_db(project)
             self._projects[pr._id] = pr
 
-
-    def get_value(self, date, currency = 'ILS'):
+    def get_value(self, date, currency='ILS'):
         val = 0
         for pr in self._projects.values():
             tempVal = pr.value(date, currency)
             val += tempVal
         return val
 
-    def get_invested_value(self, date, currency = 'ILS'):
+    def get_invested_value(self, date, currency='ILS'):
         val = 0
         for pr in self._projects.values():
-            tempVal = pr.invested_value( date, currency )
+            tempVal = pr.invested_value(date, currency)
             val += tempVal
         return val
 
-
-
-    def add_project(self, name="", equity = 0, currency='ILS', irr = 0, description="", operator = "", type="", start_date = datetime.now(), end_date = None):
-        pr = Project(self._converter,name, equity, currency, irr , description,operator, type, start_date , end_date )
+    def add_project(self, name="", equity=0, currency='ILS', irr=0, description="", operator="", type="",
+                    start_date=datetime.now(), end_date=None):
+        pr = Project(self._converter, name, equity, currency, irr, description, operator, type, start_date, end_date)
 
         id = self._db.save_project(pr)
         pr._id = str(id)
@@ -112,18 +111,16 @@ class Refet:
         pr._start_date = parseDate(start_date)
         pr._end_date = parseDate(end_date)
         updated = self._db.update_project(pr)
-        if  updated:
-            jsonStr =  flaskJson.dumps({'ok': True})
+        if updated:
+            jsonStr = flaskJson.dumps({'ok': True})
         else:
             jsonStr = flaskJson.dumps({'ok': False, 'error': 'id not found'})
             self._projects[id] = savedPRoj
-        response =  makeResponse(jsonStr, self._app)
+        response = makeResponse(jsonStr, self._app)
         return response
-
 
     def isValidUser(self, username):
         return username in self._users
-
 
     def _getProjecStats(self):
         id = request.args['id']
@@ -155,18 +152,18 @@ class Refet:
         get all projects in json format
         :return:
         '''
+
         def defaultFunc(o):
             if isinstance(o, datetime):
-                return o.isoformat()+".000Z"
+                return o.isoformat() + ".000Z"
             elif isinstance(o, CurrencyConverter):
                 return ''
             else:
                 return o.__dict__
-                
 
-        jsonStr  = flaskJson.dumps(list(self._projects.values()), default=defaultFunc ,
-                          sort_keys=True, indent=4)
-        response =  makeResponse(jsonStr, self._app)
+        jsonStr = flaskJson.dumps(list(self._projects.values()), default=defaultFunc,
+                                  sort_keys=True, indent=4)
+        response = makeResponse(jsonStr, self._app)
         return response
 
     def statsDict(self):
@@ -182,10 +179,10 @@ class Refet:
         '''
 
         if 'id' in request.args:
-            stats =  self._getProjecStats()
+            stats = self._getProjecStats()
         else:
             stats = self.statsDict()
-        jsonStr =  flaskJson.dumps(stats)
+        jsonStr = flaskJson.dumps(stats)
         response = makeResponse(jsonStr, self._app)
         return response
 
@@ -193,14 +190,14 @@ class Refet:
         ret = []
         interval = 1
         projects = list(self._projects.values())
-        projects = sorted(projects, key = lambda x: x._start_date)
-        startDate = projects[0]._start_date #smallest start date
+        projects = sorted(projects, key=lambda x: x._start_date)
+        startDate = projects[0]._start_date  # smallest start date
         endDate = datetime.now()
         dt = startDate
         while dt <= endDate:
-            ret.append( { 'date' :dt.isoformat() +".000Z",
-                          'value' : self.get_value(dt),
-                          'invested_value' : self.get_invested_value(dt)})
+            ret.append({'date': dt.isoformat() + ".000Z",
+                        'value': self.get_value(dt),
+                        'invested_value': self.get_invested_value(dt)})
 
             dt += relativedelta(months=+int(interval))
         ret.append({'date': endDate.isoformat() + "Z",
@@ -223,18 +220,18 @@ class Refet:
     #     ret.append({'date': endDate.isoformat() + "Z", 'value': self.get_invested_value(endDate)})
     #     return ret
 
-
     def add_projectR(self):
-         r =request.json
-         start_date = r['startDate']
-         end_date = r['endDate']
+        r = request.json
+        start_date = r['startDate']
+        end_date = r['endDate']
 
-         id = self.add_project(r['name'], equity = r['equity'], currency=r['currency'], irr = r['irr'], description=r['description'],
-                               operator = r['operator'] if 'operator' in r else "",
-                               type = r['type'] if 'type' in r else "",
-                          start_date = parseDate(start_date),
-                          end_date= parseDate(end_date) )
-         jsonStr =  flaskJson.dumps({'ok': True, 'id':str(id)})
+        id = self.add_project(r['name'], equity=r['equity'], currency=r['currency'], irr=r['irr'],
+                              description=r['description'],
+                              operator=r['operator'] if 'operator' in r else "",
+                              type=r['type'] if 'type' in r else "",
+                              start_date=parseDate(start_date),
+                              end_date=parseDate(end_date))
+        jsonStr = flaskJson.dumps({'ok': True, 'id': str(id)})
 
-         response = makeResponse(jsonStr, self._app)
-         return response
+        response = makeResponse(jsonStr, self._app)
+        return response
