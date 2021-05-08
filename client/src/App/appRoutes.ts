@@ -5,6 +5,7 @@ export const appRoutes = [
     {
         path: "/home",
         name: "Home",
+        private: true,
         component: HomePage,
     },
     {
